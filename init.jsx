@@ -52,7 +52,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
   }
   
 	// Define Global variables
-	var mainComp, projectName, project, path;
+	var mainComp, projectName, project, path, projectVersion;
   
 	var run = function() {
 		if( !app.project ) {		  
@@ -61,7 +61,11 @@ $.evalFile(PATH + "/library/prototype.jsx");
 			if(TEST == false) {
 				mainComp = new Object(_.getComp(SubsParams.compositionName));
 				var a = SubsParams.projectFile.split("/");
-				projectName = a[a.length-1].split(".")[0];
+
+        var projectComponents =  a[a.length-1].split(".")[0].split("_");
+      	projectName = projectComponents[0];
+        projectVersion = projectComponents[1];
+
 			} else {
 				mainComp = new Object(_.getComp(testCompName));
 				projectName = testProjectName;
@@ -72,7 +76,13 @@ $.evalFile(PATH + "/library/prototype.jsx");
       }
 			
       var project;		
-			if(projectName == "DR2") {
+
+      $.evalFile(PATH + "/../scripts/"+projectName+".jsx");      
+      
+      SETTINGS = project.SETTINGS;
+      project.create();
+      
+			/*if(projectName == "DR2") {
 			  
 			  $.evalFile(PATH + "/DR2/scripts/DR2.jsx");		  
 				project = new DR2();
@@ -81,10 +91,10 @@ $.evalFile(PATH + "/library/prototype.jsx");
 				
 			} else if (projectName.indexOf("DR3") !== -1) {
               
-    			  $.evalFile(PATH + "/DR3/scripts/DR3.jsx");			  
-    				project = new DR3();
-    				SETTINGS = project.SETTINGS;
-    				project.create();            
+			  $.evalFile(PATH + "/DR3/scripts/DR3.jsx");			  
+				project = new DR3();
+				SETTINGS = project.SETTINGS;
+				project.create();            
             
 			} else if (projectName == "DR1") {
 		
@@ -109,7 +119,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
 				
 			} else {
 			  throw new Error("Project not valid.")
-			}
+			}*/
 			
       if(DEBUG_FRAME){
         debug.addDebugComp(mainComp);
