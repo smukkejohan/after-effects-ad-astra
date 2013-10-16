@@ -20,7 +20,7 @@
   var args = {
     destination: "",
     id: 'test',
-    input: new File(PATH + "/../renderService/data/render.xml"),
+    input: new File("c:/GMAB-Render-Server/data/render.xml"),
     //OMTemplate: 'TR_til_MA',
     RSTemplate: 'Preview',
     OMTemplate: 'Preview',
@@ -28,14 +28,16 @@
   };
   
   // Load local settings from xml file
-  var argsFile = new File(PATH + "/../renderService/data/args.xml"); 
+  var argsFile = new File("c:/GMAB-Render-Server/data/args.xml"); 
+  
   if (argsFile) {
     argsFile.open('r'); 
+
     var argsXml = new XML(argsFile.read());
-    
-    args.input = new File(argsXml.input);
+
+   // args.input = new File(argsXml.input);
   //  $.write(args.input);
-   // $.write(argsXml.input);
+    
     args.destination = argsXml.destination;
     args.logDestination = "c:/DR-Airlook/gmab/log.txt";
     
@@ -49,15 +51,19 @@
   
   /* Read the input XML */
   var config = args.input;
+  
   if (config) {
     config.open("r");
     var myXML = new XML(config.read());
+   
     // the name attribute is formatted as AE Project Name/{Main Composition Name}
     var name = myXML.Page[0].@name; 
+
     var projectName = name.split('\\')[0];
     var compName = name.split('\\')[1];
-    var forceRender = (myXML.Page[0].@forceRender == "true");
+    var forceRender = true;//(myXML.Page[0].@forceRender == "true");
 
+    
     if(myXML.Page[0].@OutputName !== undefined && myXML.Page[0].@OutputName.length > 0){
     }
 
@@ -106,7 +112,7 @@
   
     var SubsParams = {
       'substitutions': [], // filled later
-      'projectFile': PATH + "/" + projectName + "/" + projectName + ".aep", 
+      'projectFile': PATH + "/../" + projectName + ".aep", 
       'compositionName': compName,
       'outputFile': args.destination + '/' + args.fileName , 
       'OMTemplate': args.OMTemplate,
@@ -170,6 +176,7 @@ function validateParameters(params) {
    * When this.debug is true show errorText with an alert() dialog when false write to trace file.
    */
 function reportError(errorText) {
+  $.write(errorText+"\n")
     if (this.debug && this.popDialogs) {
         alert(errorText.toString());
     }
@@ -643,12 +650,14 @@ function findSubstitutionInFrame(subType, objName, compPath) {
      * c:\Program Files\Adobe\Adobe After Effects CS5\Support Files\Scripts\Startup
      */
   function render(projectFile) {
+    
       if (typeof gAECommandLineRenderer == 'undefined') {
           app.exitCode = 13;
       } else {
           SubsParams.projectFile = projectFile.toString();
           try {
               app.exitCode = 0;
+              
               eval(build_render_script(SubsParams));
               trace("aerender exitCode = " + app.exitCode);
           } catch (exception) {
@@ -666,6 +675,7 @@ function findSubstitutionInFrame(subType, objName, compPath) {
      * the composition to an output file.
      */
   function main() {
+
       var proceed = true;
 
       if (! validateParameters(SubsParams)) {
@@ -705,7 +715,7 @@ function findSubstitutionInFrame(subType, objName, compPath) {
           app.exitCode = 0;
           var tempProjectFile = new File(getTempFolder().fullName + '/' + (new Date()).getTime().toString(16) + '.aep');
           
-         try { // We can remove this try while testing 
+        try { // We can remove this try while testing 
 
           if (app.openFast(projectFile) == null) {
            reportError("main: error, failed to open project " + projectFile.toString());
@@ -783,6 +793,8 @@ function findSubstitutionInFrame(subType, objName, compPath) {
     
     /* START of injected code block */
     function loadNestedScript() {
+      
+      //$.write(PATH + "/init.jsx")
           $.evalFile(PATH + "/init.jsx"); // Todo: this need to be an absolute path on  SAN
     }
     

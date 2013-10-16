@@ -35,10 +35,10 @@ $.evalFile(PATH + "/library/prototype.jsx");
      var DEBUG_FRAME = false;
   }
 	
-  var TEST = true; //True if running init stand alone
+  var TEST = false; //True if running init stand alone
 
   // TEST DATA - When running with test true data is inserted directly into the fields in the ae project
-  var testDebug = true;
+  var testDebug = false;
   var testCompName = "{BH}";
   var testProjectName = "DR1"; 
 
