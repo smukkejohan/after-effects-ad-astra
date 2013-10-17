@@ -3,6 +3,11 @@
 ** A paragraph represents one or more lines of text in a single container with a common anchor point
 ** WARNING: do not use this inside a for(var i) loop, since i will be manipulated! 
 */
+
+var _textSizeCache =  {};
+var _textFontName;
+
+
 var Paragraph2D = function(origin, container, options) {
 	
 	var font, bounds, direction;
@@ -17,7 +22,9 @@ var Paragraph2D = function(origin, container, options) {
 	
 	
 	__construct = function() {		
-		font = Font.get(origin.property("Source Text").value.font)
+		_textFontName = origin.property("Source Text").value.font+"_"+origin.property("Source Text").value.fontSize;
+    font = Font.get(origin.property("Source Text").value.font)
+
 		
 		if(!options.direction) direction = "down"; // todo else parse it if it is there
 		if(!options.padding) padding = [0, 0, 0, 0];
@@ -46,13 +53,31 @@ var Paragraph2D = function(origin, container, options) {
 		return origin.name;
 	}
 	
+
+
+  getTextSize = function(layer, word){
+    word = word.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+
+    if(!word)
+      return {w:0, h:0};
+
+    if(_textSizeCache[_textFontName+'_'+word] !== undefined){
+      return _textSizeCache[_textFontName+'_'+word];
+    }
+
+    _textSizeCache[_textFontName+'_'+word] = layer.getTextSize(word);
+    return _textSizeCache[_textFontName+'_'+word];    
+  }
+
+
+
 	getWordWidths = function() {
 		widths = [];
 		words = utils.splitText(origin.getText());
 		
 		for(i in words) {
 			var debugOrigin = origin;
-			widths.push( origin.getTextSize(words[i]).w );
+      widths.push( getTextSize(origin, words[i]).w);
 		}	
 	}
 	
@@ -79,7 +104,6 @@ var Paragraph2D = function(origin, container, options) {
 	}
 	
 	this.draw = function() {
-		debug.log("DRAW");
 
 		this.split();
 		this.indentLines();
@@ -153,14 +177,16 @@ var Paragraph2D = function(origin, container, options) {
 		if(w > bounds.w || origin.getText().indexOf("//") !== -1) {
 
 			debug.log("\n Trying to split " + origin.name + " width is " + w + " and max width is: " + bounds.w)
-			this.layers = splitTextLayer()
+			this.layers = this.splitTextLayer()
 
-
+      if(!this.layers){
+        return;
+      }
 			for(i in this.layers) {
 				var index = i;
 				
 				var line = this.layers[index];
-				debug.log("line: "+line.name)
+				//debug.log("line: "+line.name)
 
 				var npos = line.pos.get();	
 				npos.y += (i) * offset;
@@ -192,7 +218,7 @@ var Paragraph2D = function(origin, container, options) {
 	
 
 	//Takes the text and splits it up ind different line layers
-	splitTextLayer = function() {	
+	this.splitTextLayer = function() {	
 		var sum = 0; // width of words in current line
 		var line = []; //The current working line
 		var lines = []; // The list of lines
@@ -204,50 +230,53 @@ var Paragraph2D = function(origin, container, options) {
 			//debug.log("Working on '"+words[0]+"'  "+widths[i]);
 
       		//array of lengths of words
-      		sum += widths[i];
+      sum += widths[i];
 
-      		var word = words[0].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      var word = words[0].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 
-      		if(widths[i] == 0){
-      			words.shift();
-      		}
-      		else if(word == "//" && !options.disableLinebreak){
-      			//debug.log("New line")
-        		line.push(words.shift());
-        		_.trimArray(line);
-        		lines.push(line.join(""));
+      if(widths[i] == 0){
+        words.shift();
+      }
+      else if(word == "//" && !options.disableLinebreak){
+        //debug.log("New line")
+        line.push(word);
+        words.shift();
+        _.trimArray(line);
+        lines.push(line.join(" "));
 
-        		line = [];
-        		sum = 0;
-      		}
-      		else if(sum <= bounds.w){ //we are less then a whole line, lets push it to the line
-        		//debug.log("Push");
-        		line.push(words.shift());
-        	} 
-        	else if(widths[i] > bounds.w) { //The word itself is longer then the bounds
-        		debug.log("Word "+words[0]+" is longer then bounds");
-        		if(line.length > 0){
-        			_.trimArray(line);
-        			lines.push(line.join(""));
-        			line = [];
-        		}
-        		lines.push(words.shift()); //Add the word as a word itself
-        		sum = 0;
-        	} 
-        	else if(sum > bounds.w){ //The sum is bigger then the sum, so we split
-        		//debug.log("Splitting line")
-        		_.trimArray(line);
-        		lines.push(line.join(""));
+        line = [];
+        sum = 0;
+      }
+      else if(sum <= bounds.w){ //we are less then a whole line, lets push it to the line
+        //debug.log("Push");
+        line.push(word);
+        words.shift()
+      } 
+      else if(widths[i] > bounds.w) { //The word itself is longer then the bounds
+        //debug.log("Word "+words[0]+" is longer then bounds");
+        if(line.length > 0){
+          _.trimArray(line);
+          lines.push(line.join(" "));
+          line = [];
+        }
+        lines.push(words.shift()); //Add the word as a word itself
+        sum = 0;
+      } 
+      else if(sum > bounds.w){ //The sum is bigger then the sum, so we split
+        //debug.log("Splitting line")
+        _.trimArray(line);
+        lines.push(line.join(" "));
 
-        		line = [];
-        		sum = 0;
-        	}
+        line = [];
+        sum = 0;
+      }
+
 
 			if(words.length == 0){ // add the last word
 				//debug.log("Finishing up")
 				if(line.length > 0){ 
 					_.trimArray(line);
-					lines.push(line.join(""));
+          lines.push(line.join(" "));
 					// this might be where we get the duplicate line
 				}
 			}
@@ -259,8 +288,13 @@ var Paragraph2D = function(origin, container, options) {
 		}
 
 		for(var i = 0; i < lines.length; i++){
-			lines = utils.normalize2DTextLines(origin, lines, bounds.w);
-		}
+      var ret = utils.normalize2DTextLines(origin, lines, bounds.w);
+      if(ret){
+        lines = ret;
+      } else {
+        i = lines.length;
+      }
+    }
 
 		//Strip newlines (//)
 		for(var i = 0; i < lines.length; i++){
@@ -346,6 +380,8 @@ var Paragraph2D = function(origin, container, options) {
 utils.normalize2DTextLines = function(layer, lines, projectedMaxWidth) {
 	var widths = [];
 	var lineWords = [];
+  var anyChanges = false;
+
 	
 	for(i in lines){
 		widths.push(layer.getTextSize(lines[i]).w);
@@ -360,43 +396,52 @@ utils.normalize2DTextLines = function(layer, lines, projectedMaxWidth) {
 		var prevLine = "";
 		if(j>0) {
 			prevLine = lineWords[j-1];
-			var lastWordInPrevLine = prevLine[prevLine.length - 1];
-			var wordWidth = layer.getTextSize(lastWordInPrevLine).w;
 
-			//Dont move words if its ending with colon or is a linebreak (//)
-			if(lastWordInPrevLine.substr(lastWordInPrevLine.length - 1) !== ":" 
-				&& lastWordInPrevLine !== "//"){
+      if( widths[j-1] > widths[j]){
+        var lastWordInPrevLine = prevLine[prevLine.length - 1];
+        var wordWidth = getTextSize(layer, lastWordInPrevLine).w;
 
-				if(wordWidth < space && widths[j-1] > widths[j]){
+        //Dont move words if its ending with colon or is a linebreak (//)
+        if(lastWordInPrevLine.substr(lastWordInPrevLine.length - 1) !== ":" 
+          && lastWordInPrevLine !== "//"){
 
-					//HMm hvad gør det her godt for?! 
+          if(wordWidth < space ){
 
-					/*if(widths[j-1]-wordWidth < wordWidth+widths[j] && j == 1) {
-							debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
-							var word = lineWords[j-1].pop();
-							if(word.substring(word.length-1,word.length) != "-"){
-								word += " "
-							}
-							if(word == "-"){
-								word += " ";
-							}
-							lineWords[j].unshift(word);
-					} else*/ if(widths[j-1]-wordWidth > wordWidth+widths[j]) {
-							debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
-							var word = lineWords[j-1].pop();
-							if(word.substring(word.length-1,word.length) != "-"){
-								word += " ";
-							}
-							if(word == "-"){
-								word += " ";
-							}
-							lineWords[j].unshift(word);
-					}
+            //HMm hvad gør det her godt for?! 
+
+            /*if(widths[j-1]-wordWidth < wordWidth+widths[j] && j == 1) {
+                debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
+                var word = lineWords[j-1].pop();
+                if(word.substring(word.length-1,word.length) != "-"){
+                  word += " "
+                }
+                if(word == "-"){
+                  word += " ";
+                }
+                lineWords[j].unshift(word);
+            } else*/ 
+
+            if(widths[j-1]-wordWidth > wordWidth+widths[j]) {
+                debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
+                anyChanges = true;
+                var word = lineWords[j-1].pop();
+                if(word.substring(word.length-1,word.length) != "-"){
+                  word += " ";
+                }
+                if(word == "-"){
+                  word += " ";
+                }
+                lineWords[j].unshift(word);
+            }
+          }
 				}
 			}
 		}
 	}
 
+  if(!anyChanges){
+    return false;
+  }
 	lines = [];
 	for(k in lineWords){
 		lines.push(lineWords[k].join(""));
