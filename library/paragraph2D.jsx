@@ -7,6 +7,7 @@
 var _textSizeCache =  {};
 var _textFontName;
 
+
 var Paragraph2D = function(origin, container, options) {
 	
 	var font, bounds, direction;
@@ -21,14 +22,10 @@ var Paragraph2D = function(origin, container, options) {
 	
 	
 	__construct = function() {		
-    
-    this.failOnBoundFailure = false;
-    
-    _textFontName = origin.property("Source Text").value.font+"_"+origin.property("Source Text").value.fontSize;
-  	font = Font.get(origin.property("Source Text").value.font)
+		_textFontName = origin.property("Source Text").value.font+"_"+origin.property("Source Text").value.fontSize;
+    font = Font.get(origin.property("Source Text").value.font)
 
-
-    	
+		
 		if(!options.direction) direction = "down"; // todo else parse it if it is there
 		if(!options.padding) padding = [0, 0, 0, 0];
 		origin.disable();
@@ -45,8 +42,7 @@ var Paragraph2D = function(origin, container, options) {
 		assumedHeight = new Size(0, assumedLineNum * offset).h	
 
 		origin.disable();
-    getWordWidths();
-
+		getWordWidths();
 	}
 	
 	this.getAssumedFit = function() {
@@ -57,6 +53,7 @@ var Paragraph2D = function(origin, container, options) {
 		return origin.name;
 	}
 	
+
 
   getTextSize = function(layer, word){
     word = word.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -72,12 +69,15 @@ var Paragraph2D = function(origin, container, options) {
     return _textSizeCache[_textFontName+'_'+word];    
   }
 
+
+
 	getWordWidths = function() {
 		widths = [];
 		words = utils.splitText(origin.getText());
 		
 		for(i in words) {
-			widths.push( getTextSize(origin, words[i]).w);
+			var debugOrigin = origin;
+      widths.push( getTextSize(origin, words[i]).w);
 		}	
 	}
 	
@@ -104,14 +104,10 @@ var Paragraph2D = function(origin, container, options) {
 	}
 	
 	this.draw = function() {
-    this.boundFailure = false;
 
 		this.split();
-
 		this.indentLines();
-
 		this.enable();
-
 		return this;
 	}
 	
@@ -186,17 +182,16 @@ var Paragraph2D = function(origin, container, options) {
       if(!this.layers){
         return;
       }
-
 			for(i in this.layers) {
 				var index = i;
 				
 				var line = this.layers[index];
-		//		debug.log("line: "+line.name)
+				//debug.log("line: "+line.name)
 
 				var npos = line.pos.get();	
 				npos.y += (i) * offset;
 				var prop = line.property("Position");
-				 
+				
 				if(prop.numKeys != 0){
 					for(var i=1; i<=prop.numKeys; i++) {
 						var value   = prop.valueAtTime(prop.keyTime(i), false);
@@ -234,78 +229,72 @@ var Paragraph2D = function(origin, container, options) {
 			i = numWords - words.length;
 			//debug.log("Working on '"+words[0]+"'  "+widths[i]);
 
-  		//array of lengths of words
-  		sum += widths[i];
+      		//array of lengths of words
+      sum += widths[i];
 
-  		var word = words[0].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      var word = words[0].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 
-  		if(widths[i] == 0){
-  			words.shift();
-  		}
-  		else if(word == "//" && !options.disableLinebreak){
-  			//debug.log("New line")
-    		line.push(word);
+      if(widths[i] == 0){
         words.shift();
-    		_.trimArray(line);
-    		lines.push(line.join(" "));
+      }
+      else if(word == "//" && !options.disableLinebreak){
+        //debug.log("New line")
+        line.push(word);
+        words.shift();
+        _.trimArray(line);
+        lines.push(line.join(" "));
 
-    		line = [];
-    		sum = 0;
-  		}
-  		else if(sum <= bounds.w){ //we are less then a whole line, lets push it to the line
-    		//debug.log("Push");
-    		line.push(word);
+        line = [];
+        sum = 0;
+      }
+      else if(sum <= bounds.w){ //we are less then a whole line, lets push it to the line
+        //debug.log("Push");
+        line.push(word);
         words.shift()
-    	} 
-    	else if(widths[i] > bounds.w) { //The word itself is longer then the bounds
-    		//debug.log("Word "+words[0]+" is longer then bounds");
-    		if(line.length > 0){
-    			_.trimArray(line);
-    			lines.push(line.join(" "));
-    			line = [];
-    		}
-    		lines.push(words.shift()); //Add the word as a word itself
-    		sum = 0;
-    	} 
-    	else if(sum > bounds.w){ //The sum is bigger then the sum, so we split
-    		//debug.log("Splitting line")
-    		_.trimArray(line);
-    		lines.push(line.join(" "));
+      } 
+      else if(widths[i] > bounds.w) { //The word itself is longer then the bounds
+        //debug.log("Word "+words[0]+" is longer then bounds");
+        if(line.length > 0){
+          _.trimArray(line);
+          lines.push(line.join(" "));
+          line = [];
+        }
+        lines.push(words.shift()); //Add the word as a word itself
+        sum = 0;
+      } 
+      else if(sum > bounds.w){ //The sum is bigger then the sum, so we split
+        //debug.log("Splitting line")
+        _.trimArray(line);
+        lines.push(line.join(" "));
 
-    		line = [];
-    		sum = 0;
-    	}
+        line = [];
+        sum = 0;
+      }
+
 
 			if(words.length == 0){ // add the last word
 				//debug.log("Finishing up")
 				if(line.length > 0){ 
 					_.trimArray(line);
-					lines.push(line.join(" "));
+          lines.push(line.join(" "));
+					// this might be where we get the duplicate line
 				}
 			}
 		}
-    
-
-    //Debug
-    /*for(var i = 0; i < lines.length; i++){
-      debug.log("Line "+i+": "+lines[i]);
-    }	*/	
 		
-    //Trim whitespaces
+		//Trim whitespaces
 		for(var i = 0; i < lines.length; i++){
 			lines[i] = lines[i].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 		}
 
-
 		for(var i = 0; i < lines.length; i++){
-     // debug.log("Normalize line "+i)
       var ret = utils.normalize2DTextLines(origin, lines, bounds.w);
       if(ret){
         lines = ret;
       } else {
         i = lines.length;
       }
-		}
+    }
 
 		//Strip newlines (//)
 		for(var i = 0; i < lines.length; i++){
@@ -344,21 +333,22 @@ var Paragraph2D = function(origin, container, options) {
 	** Returns the viewport dimensions of the longest line
 	*/
 	this.getProjectedWidth = function() {	
-    var width = 0;
+		var width = 0;
 		var linewidth = 0;
 		if(this.layers.length > 0) {			
 			for(i in this.layers) {
-				linewidth = this.layers[i].getWidth();
+				linewidth = this.layers[i].getSize().w;
 
 				if(linewidth > width) {
 					width = linewidth;
 				}
 			}
 		}
-    return width
+		return width
 	}
 	
 	this.collectInComp = function(time) {
+		
 		var comp = app.project.items.addComp(origin.name+"-Layers", Math.ceil(this.getProjectedWidth())+7, Math.ceil(this.getProjectedHeight()), 1, time, SETTINGS.FRAMERATE)
 		comp = _.getComp(comp.name);
 		var compLayers = []
@@ -391,11 +381,13 @@ utils.normalize2DTextLines = function(layer, lines, projectedMaxWidth) {
 	var widths = [];
 	var lineWords = [];
   var anyChanges = false;
+
 	
 	for(i in lines){
-		widths.push(getTextSize(layer, lines[i]).w);
-    lineWords.push(utils.splitText(lines[i]));    
+		widths.push(layer.getTextSize(lines[i]).w);
+		lineWords.push(utils.splitText(lines[i]));
 	}
+	
 	for(j in lines){
 		
 		var width = widths[j];
@@ -406,46 +398,47 @@ utils.normalize2DTextLines = function(layer, lines, projectedMaxWidth) {
 			prevLine = lineWords[j-1];
 
       if( widths[j-1] > widths[j]){
-  			var lastWordInPrevLine = prevLine[prevLine.length - 1];
-  			var wordWidth = getTextSize(layer, lastWordInPrevLine).w;
+        var lastWordInPrevLine = prevLine[prevLine.length - 1];
+        var wordWidth = getTextSize(layer, lastWordInPrevLine).w;
 
-  			//Dont move words if its ending with colon or is a linebreak (//)
-  			if(lastWordInPrevLine.substr(lastWordInPrevLine.length - 1) !== ":" 
-  				&& lastWordInPrevLine !== "//"){
+        //Dont move words if its ending with colon or is a linebreak (//)
+        if(lastWordInPrevLine.substr(lastWordInPrevLine.length - 1) !== ":" 
+          && lastWordInPrevLine !== "//"){
 
-  				if(wordWidth < space ){
+          if(wordWidth < space ){
 
-  					//HMm hvad gør det her godt for?! 
+            //HMm hvad gør det her godt for?! 
 
-  					/*if(widths[j-1]-wordWidth < wordWidth+widths[j] && j == 1) {
-  							debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
-  							var word = lineWords[j-1].pop();
-  							if(word.substring(word.length-1,word.length) != "-"){
-  								word += " "
-  							}
-  							if(word == "-"){
-  								word += " ";
-  							}
-  							lineWords[j].unshift(word);
-  					} else*/ 
+            /*if(widths[j-1]-wordWidth < wordWidth+widths[j] && j == 1) {
+                debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
+                var word = lineWords[j-1].pop();
+                if(word.substring(word.length-1,word.length) != "-"){
+                  word += " "
+                }
+                if(word == "-"){
+                  word += " ";
+                }
+                lineWords[j].unshift(word);
+            } else*/ 
 
             if(widths[j-1]-wordWidth > wordWidth+widths[j]) {
-  							debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
+                debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
                 anyChanges = true;
-  							var word = lineWords[j-1].pop();
-  							if(word.substring(word.length-1,word.length) != "-"){
-  								word += " ";
-  							}
-  							if(word == "-"){
-  								word += " ";
-  							}
-  							lineWords[j].unshift(word);
-  					}
+                var word = lineWords[j-1].pop();
+                if(word.substring(word.length-1,word.length) != "-"){
+                  word += " ";
+                }
+                if(word == "-"){
+                  word += " ";
+                }
+                lineWords[j].unshift(word);
+            }
           }
 				}
 			}
 		}
 	}
+
   if(!anyChanges){
     return false;
   }
@@ -453,6 +446,7 @@ utils.normalize2DTextLines = function(layer, lines, projectedMaxWidth) {
 	for(k in lineWords){
 		lines.push(lineWords[k].join(""));
 	}
+
 	return lines;
 }
 
