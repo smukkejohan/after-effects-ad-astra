@@ -60,6 +60,8 @@
     var name = myXML.Page[0].@name; 
 
     var projectName = name.split('\\')[0];
+    projectName = projectName.split('_')[0];
+    
     var compName = name.split('\\')[1];
     var forceRender = true;//(myXML.Page[0].@forceRender == "true");
 
