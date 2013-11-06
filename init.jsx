@@ -13,6 +13,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
 	var OS = $.os;
   
   // The order of theese includes matters!
+  $.evalFile(PATH + "/library/resetAEPrefrencesFile.jsx");
   $.evalFile(PATH + "/library/debug.jsx");
   $.evalFile(PATH + "/library/log.jsx");
   $.evalFile(PATH + "/library/fonts.jsx");
