@@ -3,7 +3,7 @@
 //  1: Break on runtime errors 
 //  2: Full debug mode // note this is set in miranda.jsx
 //$.level = 2;
-  var PATH = new File($.fileName).path;
+var PATH = new File($.fileName).path;
 
 // Prototype contains functions that extend core javascript objects
 //   everything else goes into anonomous objects '{}'
@@ -39,32 +39,54 @@ $.evalFile(PATH + "/library/prototype.jsx");
 
   // TEST DATA - When running with test true data is inserted directly into the fields in the ae project
   var testDebug = false;
-  var testCompName = "{BH}";
+  var testCompName = "{ID}";
   var testProjectName = "DR1"; 
-
-  if(TEST) {
+  /*if(TEST) {
     var DEBUG = testDebug;
     if(DEBUG) {
       $.level = 2;
     } else {
       $.level = 0;
     }
-  }
+  }*/
   
 	// Define Global variables
 	var mainComp, projectName, project, path, projectVersion;
+
+  var handleFootage = function(){
+    for(var i in SubsParams.clips){
+      
+      var name =  SubsParams.clips[i].name;//.toString().replace('{','').replace('}','')
+      var comp = _.getItem(name);
+      if(comp){      
+        try {
+          comp.replace( new File(SubsParams.clips[i].substitute) )
+        } catch(e) {
+          //$.write("Could not replace "+name+" "+e.message)
+        }
+      }
+    }
+  }
   
 	var run = function() {
+
 		if( !app.project ) {		  
 		  throw new Error("No project is loaded")
 		} else {
-			if(TEST == false) {
-				mainComp = new Object(_.getComp(SubsParams.compositionName));
-				var a = SubsParams.projectFile.split("/");
 
-        var projectComponents =  a[a.length-1].split(".")[0].split("_");
-      	projectName = projectComponents[0];
-        projectVersion = projectComponents[1];
+			if(TEST == false) {
+
+        handleFootage();
+
+				//mainComp = new Object(_.getComp(SubsParams.compositionName));        
+        mainComp = new Object(_.getComp('stage'));
+
+				//var a = SubsParams.projectFile.split("/");
+
+        //var projectComponents =  a[a.length-1].split(".")[0].split("_");
+      	projectName = SubsParams.projectName;
+        projectVersion = SubsParams.projectVersion;
+
 
 			} else {
 				mainComp = new Object(_.getComp(testCompName));
@@ -77,8 +99,8 @@ $.evalFile(PATH + "/library/prototype.jsx");
 			
       var project;		
 
+
       $.evalFile(PATH + "/../scripts/"+projectName+".jsx");      
-      
       SETTINGS = project.SETTINGS;
       project.create();
       
@@ -128,12 +150,13 @@ $.evalFile(PATH + "/library/prototype.jsx");
 	}
 	
 	app.beginUndoGroup("UNDO LOVENEST");	
-	
+
 	// only catch all errors when we are not debugging
-	if(!DEBUG) {
+	if(false) {
   	try {
   	  run();
     } catch (e) {
+      alert(e.name + ": " + e.message, 1)
       log(e.name + ": " + e.message, 1)
     }
   } else {
