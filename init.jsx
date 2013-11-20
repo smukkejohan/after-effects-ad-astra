@@ -17,7 +17,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
   $.evalFile(PATH + "/library/log.jsx");
   $.evalFile(PATH + "/library/fonts.jsx");
   
-  $.evalFile(PATH + "/library/utils.jsx");
+  $.evalFile(PATH + "/library/utils_LEGACY.jsx");
   $.evalFile(PATH + "/library/utils_keys.jsx");
   
   $.evalFile(PATH + "/library/vectorMath.jsx");
