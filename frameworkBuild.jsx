@@ -38,6 +38,16 @@ $.evalFile(PATH + "/library/prototype.jsx");
       if(comp){      
         try {
           comp.replace( new File(SubsParams.clips[i].substitute) )
+
+          var usageComp = utils.getComp( SubsParams.clips[i].name.toString().replace('{','').replace('}','') )
+          if(usageComp){
+            var layers = usageComp.getAllLayers();
+            for(var i=0; i<layers.length; i++){
+                layers[i].scaleToHD();
+                layers[i].setTimeRemap();               
+            }            
+          }
+          
         } catch(e) {
           //$.write("Could not replace "+name+" "+e.message)
         }
