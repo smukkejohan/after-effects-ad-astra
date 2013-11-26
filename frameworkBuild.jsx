@@ -44,7 +44,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
             var layers = usageComp.getAllLayers();
             for(var i=0; i<layers.length; i++){
                 layers[i].scaleToHD();
-                layers[i].setTimeRemap();               
+                layers[i].setTimeRemap();
             }            
           }
           
