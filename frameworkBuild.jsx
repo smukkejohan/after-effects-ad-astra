@@ -56,7 +56,6 @@ $.evalFile(PATH + "/library/prototype.jsx");
 
             var usageComp2 = utils.getComp( match[2])
             if(usageComp2){
-              alert(match[2])
               var layers = usageComp2.getAllLayers();
               for(var i=0; i<layers.length; i++){
                 try{
