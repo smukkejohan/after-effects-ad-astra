@@ -225,7 +225,6 @@ var Paragraph = function(origin, container, padding) {
 		//this.cleanUpContainingComp(layer, clonePrefix);
 	
 		layers = [];
-		if(lines.length <= 1) layers.push(origin);
 		for(i in lines) {
 			layers.push(origin.clone().setText(lines[i]));
 			layers[i].name = clonePrefix + origin.name + "-" + i;
