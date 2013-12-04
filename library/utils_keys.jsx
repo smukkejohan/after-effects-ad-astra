@@ -197,7 +197,12 @@
 		}
 	
 		// Remove the old keyframe
-		prop.removeKey(keyToRemove);
+		try{
+			prop.removeKey(keyToRemove);
+		} catch(e) {
+
+		}
+		
 	}
 	
 	// selectKeys()
