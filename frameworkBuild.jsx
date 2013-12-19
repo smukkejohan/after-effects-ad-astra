@@ -74,6 +74,23 @@ $.evalFile(PATH + "/library/prototype.jsx");
       }
     }
   }
+
+  var changeResolution = function(stage) {
+    if(SubsParams.resolution != undefined) {
+      var resolution = SubsParams.resolution;
+      var newStage;
+      if(resolution == "HD"){
+        newStage = stage.changeResolution(1920, 1080, 1);
+      } else if(resolution == "SD"){
+        newStage = stage.changeResolution(720, 576,  1.09401709401709);
+      } else {
+        var size = resolution.split("x");
+        newStage = stage.changeResolution(Number(size[0]), Number(size[1]), 1);
+      }
+      
+      newStage.openInViewer();
+    }
+  }
   
 	var build = function() {
 		if( !app.project ) {		  
@@ -88,7 +105,8 @@ $.evalFile(PATH + "/library/prototype.jsx");
 
       $.evalFile(PATH + "/../scripts/"+projectName+".jsx");      
       SETTINGS = project.SETTINGS;
-      project.create();     
+      project.create(); 
+      changeResolution(_.getComp('stage'));
 		}
 	}
 	
