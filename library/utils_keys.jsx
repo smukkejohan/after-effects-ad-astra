@@ -28,8 +28,23 @@
 		return layer;
 	}
 	
-	
-	
+	utils.removePropKeys = function(layer, inTime, outTime) {
+		utils.selectKeys(layer, inTime, outTime);
+		var props = utils.getSelectedKeys(layer, 1);
+
+		//props.reverse();
+		for(var i=0; i<props.length; i++){
+			var prop = props[i].prop;
+			var keys = props[i].keyTimes.reverse();
+			debug.log(prop.name + " | "+ keys.toString());
+			for(var j=0; j<keys.length; j++) {
+				var keyIndex = prop.nearestKeyIndex(keys[j]);
+				prop.removeKey(keyIndex);
+			}
+		}
+		return layer;
+
+	}
 	
 	
 	
