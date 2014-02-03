@@ -141,20 +141,21 @@
 			if (item == comp || item.name == comp) {	  
 			  if(item instanceof CompItem) {
 				  // extend the returned comp with new awesome functions
-					item.clone = function(compName)                  	  { return utils.cloneComp(item, compName);        }
-					item.getLayer = function(layerName)                   { return utils.getLayer(item, layerName);        }
-					item.searchLayer = function(str)                      { return utils.searchForLayer(item, str);        }
-					item.clear = function()                               { return utils.clearComp(item);                  }
-					item.mute = function()                                { return utils.muteCompAndAllNestedLayers(item); }
-					item.disableAll = function()                          { return utils.disableAllLayers(item);           }
-					item.enableAll = function()                           { return utils.enableAllLayers(item);            }
-					item.getCamera = function()                           { return utils.getCamera(item);                  }
-					item.setupCamera = function()                         { return utils.setupCamera(item);                }
-					item.addToComp = function(comp)                       { return utils.copyTemplate(item, comp);         }
-					item.getRandomLayer = function()                      { return utils.getRandomLayer(item);             }
-					item.getAllCompLayers = function()                    { return utils.getAllCompLayers(item);           }
-					item.getAllLayers = function()                        { return utils.getAllLayers(item);               }
-					item.moveAllKeys = function(inTime, outTime, offset)  { return utils.moveAllKeysOnAllLayers(item, inTime, outTime, offset); }
+					item.clone = function(compName)                  	  			{ return utils.cloneComp(item, compName);        }
+					item.getLayer = function(layerName)                   			{ return utils.getLayer(item, layerName);        }
+					item.searchLayer = function(str)                      			{ return utils.searchForLayer(item, str);        }
+					item.clear = function()                               			{ return utils.clearComp(item);                  }
+					item.mute = function()                                			{ return utils.muteCompAndAllNestedLayers(item); }
+					item.disableAll = function()                          			{ return utils.disableAllLayers(item);           }
+					item.enableAll = function()                           			{ return utils.enableAllLayers(item);            }
+					item.getCamera = function()                           			{ return utils.getCamera(item);                  }
+					item.setupCamera = function()                         			{ return utils.setupCamera(item);                }
+					item.addToComp = function(comp)                       			{ return utils.copyTemplate(item, comp);         }
+					item.getRandomLayer = function()                      			{ return utils.getRandomLayer(item);             }
+					item.getAllCompLayers = function()                    			{ return utils.getAllCompLayers(item);           }
+					item.getAllLayers = function()                        			{ return utils.getAllLayers(item);               }
+					item.moveAllKeys = function(inTime, outTime, offset)  			{ return utils.moveAllKeysOnAllLayers(item, inTime, outTime, offset); }
+					item.changeResolution = function(width, height, pixelAspect)	{ return utils.changeCompResolution(item, width, height, pixelAspect);}
 					return item;
 			  }
 			}	
@@ -288,6 +289,21 @@
 			}
 		}
 		
+	}
+
+	utils.changeCompResolution = function(comp, width, height, pixelAspect) {
+		// var compName = comp.name+"_"+width+"x"+height;
+		var compName = comp.name;
+		comp.name = comp.name + "_original";
+		var newComp = app.project.items.addComp(compName, width, height, pixelAspect, comp.duration, SETTINGS.FRAMERATE);
+		newComp = _.getComp(compName);
+
+		var layer = comp.addToComp(newComp);
+		var sX = width/comp.width * 100 * pixelAspect;
+		var sY = height/comp.height * 100;
+		layer.setKey("scale", [sX,sY], 0);
+
+		return newComp;
 	}
 	
 	/*
@@ -556,13 +572,23 @@
 		if(!time)       time = 0;
 		var width = layer.width;
 		var height = layer.height;
-		
-		var prop = layer.property("scale");
-		if(height < 1080){
+		var duration = layer.source.duration;
 
-			var s = Math.ceil(100 * 1080/height);
-			prop.setValueAtTime(layer.startTime, [s, s, 100]);
+		var prop = layer.property("scale");
+		if(duration == 0) {
+			var sH = Math.ceil(100 * 1080/height);
+			var sW = Math.ceil(100 * 1920/width);
+			prop.setValueAtTime(layer.startTime, [sW, sH, 100]);
+		} else {
+			if(height != 1080){
+				var s = Math.ceil(100 * 1080/height);
+				prop.setValueAtTime(layer.startTime, [s, s, 100]);
+			}
 		}
+		
+
+
+
 		return layer;
 	}
 	
@@ -1205,4 +1231,3 @@
 	}
 
 }
-

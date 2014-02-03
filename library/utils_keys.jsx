@@ -28,8 +28,23 @@
 		return layer;
 	}
 	
-	
-	
+	utils.removePropKeys = function(layer, inTime, outTime) {
+		utils.selectKeys(layer, inTime, outTime);
+		var props = utils.getSelectedKeys(layer, 1);
+
+		//props.reverse();
+		for(var i=0; i<props.length; i++){
+			var prop = props[i].prop;
+			var keys = props[i].keyTimes.reverse();
+			debug.log(prop.name + " | "+ keys.toString());
+			for(var j=0; j<keys.length; j++) {
+				var keyIndex = prop.nearestKeyIndex(keys[j]);
+				prop.removeKey(keyIndex);
+			}
+		}
+		return layer;
+
+	}
 	
 	
 	
@@ -197,7 +212,127 @@
 		}
 	
 		// Remove the old keyframe
-		prop.removeKey(keyToRemove);
+		try{
+			prop.removeKey(keyToRemove);
+		} catch(e) {
+
+		}
+		
+	}
+
+	utils.shiftKeyToNewLayer = function(prop, newProp, keyToCopy, offset)
+	{
+		// Remember the key's settings before creating the new setting, just in case creating the new key affects keyToCopy's settings
+		var inInterp  = prop.keyInInterpolationType(keyToCopy);
+		var outInterp = prop.keyOutInterpolationType(keyToCopy);
+	
+		if ((inInterp == KeyframeInterpolationType.BEZIER) && (outInterp == KeyframeInterpolationType.BEZIER))
+		{
+			var tempAutoBezier = prop.keyTemporalAutoBezier(keyToCopy);
+			var tempContBezier = prop.keyTemporalContinuous(keyToCopy);
+		}
+		if (outInterp != KeyframeInterpolationType.HOLD)
+		{
+			var inTempEase  = prop.keyInTemporalEase(keyToCopy);
+			var outTempEase = prop.keyOutTemporalEase(keyToCopy);
+		}
+		if ((prop.propertyValueType == PropertyValueType.TwoD_SPATIAL) || (prop.propertyValueType == PropertyValueType.ThreeD_SPATIAL))
+		{
+			var spatAutoBezier = prop.keySpatialAutoBezier(keyToCopy);
+			var spatContBezier = prop.keySpatialContinuous(keyToCopy);
+			var inSpatTangent  = prop.keyInSpatialTangent(keyToCopy);
+			var outSpatTangent = prop.keyOutSpatialTangent(keyToCopy);
+			var roving = prop.keyRoving(keyToCopy);
+		}
+	
+		// Create the new keyframe
+		var newTime     = prop.keyTime(keyToCopy) + offset;
+		var oldValue    = prop.keyValue(keyToCopy);
+		var newKeyIndex = newProp.addKey(newTime);
+		newProp.setValueAtKey(newKeyIndex, oldValue);
+	
+		if (outInterp != KeyframeInterpolationType.HOLD)
+		{
+			newProp.setTemporalEaseAtKey(newKeyIndex, inTempEase, outTempEase);
+		}
+	
+		// Copy over the keyframe settings
+		newProp.setInterpolationTypeAtKey(newKeyIndex, inInterp, outInterp);
+	
+		if ((inInterp == KeyframeInterpolationType.BEZIER) && (outInterp == KeyframeInterpolationType.BEZIER) && tempContBezier)
+		{
+			newProp.setTemporalContinuousAtKey(newKeyIndex, tempContBezier);
+			newProp.setTemporalAutoBezierAtKey(newKeyIndex, tempAutoBezier);		// Implies Continuous, so do after it
+		}
+	
+		if ((prop.propertyValueType == PropertyValueType.TwoD_SPATIAL) || (prop.propertyValueType == PropertyValueType.ThreeD_SPATIAL))
+		{
+			newProp.setSpatialContinuousAtKey(newKeyIndex, spatContBezier);
+			newProp.setSpatialAutoBezierAtKey(newKeyIndex, spatAutoBezier);		// Implies Continuous, so do after it
+		
+			newProp.setSpatialTangentsAtKey(newKeyIndex, inSpatTangent, outSpatTangent);
+		
+			newProp.setRovingAtKey(newKeyIndex, roving);
+		}
+	
+		
+		
+	}
+
+	utils.updateKeyWithNewValue = function(prop, keyToCopy, newValue)
+	{
+		// Remember the key's settings before creating the new setting, just in case creating the new key affects keyToCopy's settings
+		var inInterp  = prop.keyInInterpolationType(keyToCopy);
+		var outInterp = prop.keyOutInterpolationType(keyToCopy);
+	
+		if ((inInterp == KeyframeInterpolationType.BEZIER) && (outInterp == KeyframeInterpolationType.BEZIER))
+		{
+			var tempAutoBezier = prop.keyTemporalAutoBezier(keyToCopy);
+			var tempContBezier = prop.keyTemporalContinuous(keyToCopy);
+		}
+		if (outInterp != KeyframeInterpolationType.HOLD)
+		{
+			var inTempEase  = prop.keyInTemporalEase(keyToCopy);
+			var outTempEase = prop.keyOutTemporalEase(keyToCopy);
+		}
+		if ((prop.propertyValueType == PropertyValueType.TwoD_SPATIAL) || (prop.propertyValueType == PropertyValueType.ThreeD_SPATIAL))
+		{
+			var spatAutoBezier = prop.keySpatialAutoBezier(keyToCopy);
+			var spatContBezier = prop.keySpatialContinuous(keyToCopy);
+			var inSpatTangent  = prop.keyInSpatialTangent(keyToCopy);
+			var outSpatTangent = prop.keyOutSpatialTangent(keyToCopy);
+			var roving = prop.keyRoving(keyToCopy);
+		}
+	
+		// Create the new keyframe
+		var newTime     = prop.keyTime(keyToCopy);
+		var newKeyIndex = prop.addKey(newTime);
+		prop.setValueAtKey(newKeyIndex, newValue);
+	
+		if (outInterp != KeyframeInterpolationType.HOLD)
+		{
+			prop.setTemporalEaseAtKey(newKeyIndex, inTempEase, outTempEase);
+		}
+	
+		// Copy over the keyframe settings
+		prop.setInterpolationTypeAtKey(newKeyIndex, inInterp, outInterp);
+	
+		if ((inInterp == KeyframeInterpolationType.BEZIER) && (outInterp == KeyframeInterpolationType.BEZIER) && tempContBezier)
+		{
+			prop.setTemporalContinuousAtKey(newKeyIndex, tempContBezier);
+			prop.setTemporalAutoBezierAtKey(newKeyIndex, tempAutoBezier);		// Implies Continuous, so do after it
+		}
+	
+		if ((prop.propertyValueType == PropertyValueType.TwoD_SPATIAL) || (prop.propertyValueType == PropertyValueType.ThreeD_SPATIAL))
+		{
+			prop.setSpatialContinuousAtKey(newKeyIndex, spatContBezier);
+			prop.setSpatialAutoBezierAtKey(newKeyIndex, spatAutoBezier);		// Implies Continuous, so do after it
+		
+			prop.setSpatialTangentsAtKey(newKeyIndex, inSpatTangent, outSpatTangent);
+		
+			prop.setRovingAtKey(newKeyIndex, roving);
+		}
+	
 	}
 	
 	// selectKeys()

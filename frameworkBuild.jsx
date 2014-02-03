@@ -74,6 +74,8 @@ $.evalFile(PATH + "/library/prototype.jsx");
       }
     }
   }
+
+ 
   
 	var build = function() {
 		if( !app.project ) {		  
@@ -88,7 +90,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
 
       $.evalFile(PATH + "/../scripts/"+projectName+".jsx");      
       SETTINGS = project.SETTINGS;
-      project.create();     
+      project.create(); 
 		}
 	}
 	
