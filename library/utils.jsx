@@ -318,6 +318,7 @@
 		layer.enable          = function()                                 { return utils.enableLayer(this); }
 		layer.disable         = function()                                 { return utils.disableLayer(this); }
 		layer.getScale        = function(time)                             { return utils.getLayerScale(this, time); }
+		layer.setScale        = function(time)                             { return utils.setLayerScale(this, time); }
 		layer.getWidth        = function(time)                             { return utils.getLayerWidth(this, time); } // will be deprecated
 		layer.getHeight       = function(time)                             { return utils.getLayerHeight(this, time); } // will be deprecated
 		layer.getSize         = function(time)                             { return utils.getLayerSize(this, time); }
@@ -554,6 +555,11 @@
 	utils.getLayerScale = function(layer, time) {
 	  if(!time) time = 0;
 	  return layer.scale.valueAtTime(time, false)
+	}
+	
+	utils.setLayerScale = function(layer, value, time) {
+	  if(!time) time = 0;
+	  return layer.scale.setValueAtTime(time, value)
 	}
 	
 	utils.getLayerWidth = function(layer, time) {
