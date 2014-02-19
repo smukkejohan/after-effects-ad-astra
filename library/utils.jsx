@@ -311,47 +311,49 @@
 	*/
 	utils.enhanceLayer = function(layer) {
 
-		layer.setText         = function(str)                              { return utils.setLayerText(this, str); }
-		layer.getText         = function()		                              { return utils.getLayerText(this); }
-		layer.getFontSize     = function()		                              { return utils.getFontSize(this); }
-		layer.setTextColor	  = function(color)							   { return utils.setLayerTextColor(this, color); }
-		layer.enable          = function()                                 { return utils.enableLayer(this); }
-		layer.disable         = function()                                 { return utils.disableLayer(this); }
-		layer.getScale        = function(time)                             { return utils.getLayerScale(this, time); }
-		layer.setScale        = function(time)                             { return utils.setLayerScale(this, time); }
-		layer.getWidth        = function(time)                             { return utils.getLayerWidth(this, time); } // will be deprecated
-		layer.getHeight       = function(time)                             { return utils.getLayerHeight(this, time); } // will be deprecated
-		layer.getSize         = function(time)                             { return utils.getLayerSize(this, time); }
-		layer.getTextSize     = function(str, time)                        { return utils.getTextLayerSize(this, str, time); }
-		layer.clone           = function(str)                              { return utils.cloneLayer(this, str); }
-		layer.cloneComp       = function(str)                              { return utils.cloneLayersComp(this, str); }
-		//layer.deepClone       = function(str)                              { return utils.deepCloneLayer(this, str); }
-		layer.scaleToHD       = function(time)                             { return utils.scaleLayerToHD(this, time); }
-		layer.setTimeRemap    = function(time)                             { return utils.setTimeRemap(this, time); }
-		layer.addToComp       = function(comp)                             { return utils.copyLayerToComp(this, comp); }
-		layer.getComp         = function()                                 { return utils.getCompFromLayer(this); }
-		layer.isComp          = function()                                 { return (this.source instanceof CompItem) }
-		layer.getMarkerIndex  = function(comment)                          { return utils.getLayerMarkerIndexByComment(this, comment) }
-		layer.getMarkerTime   = function(comment)                          { return utils.getLayerMarkerTimeByComment(this, comment) }
-		layer.getMask         = function(name)                             { return utils.getMaskByName(this, name); }
-		layer.addMask         = function(arr)                              { return utils.addMaskToLayer(this, arr); }
-		layer.masksToShapes   = function()                                 { return utils.rd_MasksToShapes_doIt(this); }
-		layer.setPos          = function(arr, time)                        { return utils.setLayerPosition(this, arr, time); }
-		layer.getPos          = function(time)                             { return utils.getLayerPosition(this, time); }
-		layer.setAnchor       = function(arr, time)                        { return utils.setLayerAnchorPoint(this, arr, time); }
-		layer.getAnchor       = function(time)                             { return utils.getLayerAnchorPoint(this, time); }
-		layer.snapGrid        = function(gx, gy, time)                     { return utils.snapLayerToGrid(this, gx, gy, time); }
-		layer.getOffset       = function(time)                             { return utils.getLayerOffset(this, time); }
-		layer.getKey          = function(propStr, index)                   { return utils.getKeyframeAtIndex(this, propStr, index); }
-		layer.getKeys         = function(propStr)                          { return utils.getKeyframes(this, propStr); }
-		layer.setKey          = function(propStr, value, time)             { return utils.setKeyframeAtTime(this, propStr, value, time); }
-		layer.deleteKey       = function(propStr, time)                    { return utils.deleteKeyframeAtTime(this, propStr, time); }
-		layer.updateKey       = function(propStr, value, index)            { return utils.updateKeyframeAtIndex(this, propStr, value, index); }
-		layer.easeKey         = function(propStr, value1, value2, index)   { return utils.setEaseAtKeyIndex(this, propStr, value1, value2, index); }
-		layer.selectKeys      = function(inTime, outTime)                  { return utils.selectPropKeys(this, inTime, outTime); }
-		layer.moveKeys        = function(propStr, inTime, outTime, offset) { return utils.movePropKeys(this, propStr, inTime, outTime, offset); }
-		layer.mute            = function()                                 { return utils.mute(this); }
-		layer.unMute          = function()                                 { return utils.unMute(this); }
+		layer.setText         = function(str)                              			{ return utils.setLayerText(this, str); }
+		layer.getText         = function()		                           			   { return utils.getLayerText(this); }
+		layer.getFontSize     = function()		                           			   { return utils.getFontSize(this); }
+		layer.setTextColor	  = function(color)							   			{ return utils.setLayerTextColor(this, color); }
+		layer.enable          = function()                                 			{ return utils.enableLayer(this); }
+		layer.disable         = function()                                 			{ return utils.disableLayer(this); }
+		layer.getScale        = function(time)                             			{ return utils.getLayerScale(this, time); }
+		layer.setScale        = function(time)                             			{ return utils.setLayerScale(this, time); }
+		layer.getWidth        = function(time)                             			{ return utils.getLayerWidth(this, time); } // will be deprecated
+		layer.getHeight       = function(time)                             			{ return utils.getLayerHeight(this, time); } // will be deprecated
+		layer.getSize         = function(time)                             			{ return utils.getLayerSize(this, time); }
+		layer.getTextSize     = function(str, time)                        			{ return utils.getTextLayerSize(this, str, time); }
+		layer.clone           = function(str)                              			{ return utils.cloneLayer(this, str); }
+		layer.cloneComp       = function(str)                              			{ return utils.cloneLayersComp(this, str); }
+		//layer.deepClone       = function(str)                            			  { return utils.deepCloneLayer(this, str); }
+		layer.scaleToHD       = function(time)                             			{ return utils.scaleLayerToHD(this, time); }
+		layer.setTimeRemap    = function(time)                             			{ return utils.setTimeRemap(this, time); }
+		layer.addToComp       = function(comp)                             			{ return utils.copyLayerToComp(this, comp); }
+		layer.getComp         = function()                                 			{ return utils.getCompFromLayer(this); }
+		layer.isComp          = function()                                 			{ return (this.source instanceof CompItem) }
+		layer.getMarkerIndex  = function(comment)                          			{ return utils.getLayerMarkerIndexByComment(this, comment) }
+		layer.getMarkerTime   = function(comment)                          			{ return utils.getLayerMarkerTimeByComment(this, comment) }
+		layer.getMask         = function(name)                             			{ return utils.getMaskByName(this, name); }
+		layer.addMask         = function(arr)                              			{ return utils.addMaskToLayer(this, arr); }
+		layer.masksToShapes   = function()                                 			{ return utils.rd_MasksToShapes_doIt(this); }
+		layer.setPos          = function(arr, time)                        			{ return utils.setLayerPosition(this, arr, time); }
+		layer.getPos          = function(time)                             			{ return utils.getLayerPosition(this, time); }
+		layer.setAnchor       = function(arr, time)                        			{ return utils.setLayerAnchorPoint(this, arr, time); }
+		layer.getAnchor       = function(time)                             			{ return utils.getLayerAnchorPoint(this, time); }
+		layer.snapGrid        = function(gx, gy, time)                     			{ return utils.snapLayerToGrid(this, gx, gy, time); }
+		layer.getOffset       = function(time)                             			{ return utils.getLayerOffset(this, time); }
+		layer.getKey          = function(propStr, index)                   			{ return utils.getKeyframeAtIndex(this, propStr, index); }
+		layer.getKeys         = function(propStr)                          			{ return utils.getKeyframes(this, propStr); }
+		layer.setKey          = function(propStr, value, time)             			{ return utils.setKeyframeAtTime(this, propStr, value, time); }
+		layer.deleteKey       = function(propStr, time)                    			{ return utils.deleteKeyframeAtTime(this, propStr, time); }
+		layer.updateKey       = function(propStr, value, index)            			{ return utils.updateKeyframeAtIndex(this, propStr, value, index); }
+		layer.offsetAllKeys   = function(prop, offset, preExpression)   			{ return utils.offsetAllKeyframesForProp(this, prop, offset, preExpression); }
+		layer.offsetKey       = function(prop, index, offset, preExpression)   		{ return utils.offsetKeyframeForProp(layer, prop, index, offset, preExpression); }
+		layer.easeKey         = function(prop, value1, value2, index)      			{ return utils.setEaseAtKeyIndex(this, prop, value1, value2, index); }
+		layer.selectKeys      = function(inTime, outTime)                  			{ return utils.selectPropKeys(this, inTime, outTime); }
+		layer.moveKeys        = function(propStr, inTime, outTime, offset) 			{ return utils.movePropKeys(this, propStr, inTime, outTime, offset); }
+		layer.mute            = function()                                 			{ return utils.mute(this); }
+		layer.unMute          = function()                                 			{ return utils.unMute(this); }
 		
 		
 		layer.getMarkerKeyTime = function(comment) {
@@ -392,6 +394,44 @@
 		if(d3) d3.enhanceLayer(layer);
 		
 		return layer;
+	}
+
+	utils.offsetKeyframeForProp = function(layer, prop, index, offset, preExpression) {
+		if(preExpression == undefined) preExpression = false;
+		var t   = prop.keyTime(index);
+		var val = prop.valueAtTime(t, preExpression);
+		if(prop.propertyValueType == PropertyValueType.TwoD_SPATIAL || prop.propertyValueType == PropertyValueType.TwoD) {
+			var newVal = [];
+			for(var j=0; j<2; j++){
+				if(offset[j] != undefined){
+					newVal.push(val[j]+offset[j]);
+				} else {
+					newVal.push(val[j]);
+				}
+			}
+			prop.setValueAtTime(t, newVal);
+		} else if(prop.propertyValueType == PropertyValueType.ThreeD_SPATIAL || prop.propertyValueType == PropertyValueType.ThreeD) {
+			var newVal = [];
+			for(var j=0; j<3; j++){
+				if(offset[j] != undefined){
+					newVal.push(val[j]+offset[j]);
+				} else {
+					newVal.push(val[j]);
+				}
+			}
+			prop.setValueAtTime(t, newVal);
+		} else {
+			prop.setValueAtTime(t, val+offset);
+		}
+		return prop;
+	}
+	
+	utils.offsetAllKeyframesForProp = function(layer, prop, offset, preExpression) {
+		if(preExpression == undefined) preExpression = false;
+
+		for(var i=1; i<= prop.numKeys; i++){
+			utils.offsetKeyframeForProp(layer, prop, i, offset, preExpression);
+		}
 	}
 	
 	// Layer specific functions
