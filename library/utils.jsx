@@ -398,7 +398,11 @@
 
 	utils.offsetKeyframeForProp = function(layer, prop, index, offset, preExpression) {
 		if(preExpression == undefined) preExpression = false;
-		var t   = prop.keyTime(index);
+		var t = 0;
+		if(prop.numKeys != 0){
+			t = prop.keyTime(index);
+		}
+		
 		var val = prop.valueAtTime(t, preExpression);
 		if(prop.propertyValueType == PropertyValueType.TwoD_SPATIAL || prop.propertyValueType == PropertyValueType.TwoD) {
 			var newVal = [];
