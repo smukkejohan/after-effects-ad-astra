@@ -351,6 +351,7 @@
 		layer.offsetKey       = function(prop, index, offset, preExpression)   		{ return utils.offsetKeyframeForProp(layer, prop, index, offset, preExpression); }
 		layer.easeKey         = function(prop, value1, value2, index)      			{ return utils.setEaseAtKeyIndex(this, prop, value1, value2, index); }
 		layer.selectKeys      = function(inTime, outTime)                  			{ return utils.selectPropKeys(this, inTime, outTime); }
+		layer.moveAllKeys	  = function(inTime, outTime, offset)					{ return utils.movePropKeys(this, inTime, outTime, offset); }
 		layer.moveKeys        = function(propStr, inTime, outTime, offset) 			{ return utils.movePropKeys(this, propStr, inTime, outTime, offset); }
 		layer.mute            = function()                                 			{ return utils.mute(this); }
 		layer.unMute          = function()                                 			{ return utils.unMute(this); }

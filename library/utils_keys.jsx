@@ -13,7 +13,6 @@
 		return comp;
 	}
 	
-	
 	utils.selectPropKeys = function(layer, inTime, outTime) {
 		utils.selectKeys(layer, inTime, outTime)
 		return layer;
@@ -383,7 +382,10 @@
 					// Select all keys between the markers
 					if(inKeyTime >= inTime && inKeyTime <= outTime && outKeyTime >= inTime && outKeyTime <= outTime){
 						for(var j=inKeyIndex; j <= outKeyIndex; j++){
-							prop.setSelectedAtKey(j, true);
+							if(!prop.dimensionsSeparated) {
+								prop.setSelectedAtKey(j, true);
+							}
+							
 						}
 					}
 				}
