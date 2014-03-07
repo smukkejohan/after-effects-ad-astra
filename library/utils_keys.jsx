@@ -44,6 +44,54 @@
 		return layer;
 
 	}
+
+	utils.copyPasteKeys = function(fromLayer, keyStartTime, keyEndTime, toLayer, offset){
+
+		if(typeof keyStartTime == "string") {
+			keyStartTime = fromLayer.getMarkerTime(keyStartTime);
+		}
+		if(typeof keyEndTime == "string") {
+			keyEndTime = fromLayer.getMarkerTime(keyEndTime);
+		}
+
+		fromLayer.selectKeys(keyStartTime,keyEndTime);
+		var props = fromLayer.selectedProperties;
+
+		for(var i=0; i<props.length; i++){
+			var prop = props[i];
+
+			if(prop.matchName == "ABDE Marker")
+				continue;
+			if(prop.matchName == "VIDEOCOPILOT 3DArray")
+				continue;
+			
+			var newProp = toLayer;
+			var propNames = [];
+			var selProp = prop;
+			var _depth = prop.propertyDepth;
+			//$.bp();
+			for(var j=1; j<=_depth; j++) {
+				propNames.push(selProp.matchName);
+				selProp = selProp.parentProperty;
+			}
+			propNames.reverse();
+			for(var k=0; k<propNames.length; k++) {
+				newProp = newProp.property(propNames[k])
+			}
+
+			
+			var _selKeys = prop.selectedKeys;
+
+			for(var j=0; j<_selKeys.length; j++){
+
+				var keyTime = prop.keyTime(_selKeys[j]);
+				var keyToCopy = prop.nearestKeyIndex(keyTime);
+				utils.shiftKeyToNewLayer(prop, newProp, keyToCopy, offset)
+				prop.setSelectedAtKey(keyToCopy, false);
+			}
+
+		}
+	}
 	
 	
 	

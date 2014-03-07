@@ -355,7 +355,7 @@
 		layer.moveKeys        = function(propStr, inTime, outTime, offset) 			{ return utils.movePropKeys(this, propStr, inTime, outTime, offset); }
 		layer.mute            = function()                                 			{ return utils.mute(this); }
 		layer.unMute          = function()                                 			{ return utils.unMute(this); }
-		
+		layer.copyPasteKeys   = function(keyStartTime, keyEndTime, toLayer, offset) { return utils.copyPasteKeys(this, keyStartTime, keyEndTime, toLayer, offset); }
 		
 		layer.getMarkerKeyTime = function(comment) {
 		  var index = this.getMarkerIndex(comment)
