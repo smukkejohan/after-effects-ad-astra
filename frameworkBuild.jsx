@@ -88,6 +88,12 @@ $.evalFile(PATH + "/library/prototype.jsx");
 			projectName = SubsParams.projectName;
       projectVersion = SubsParams.projectVersion;
 
+      // get all subprojects
+      if(File(PATH + "/../subprojects/subprojects.jsx").exists){
+        $.evalFile(PATH + "/../subprojects/subprojects.jsx");
+      }
+
+      // get project file
       $.evalFile(PATH + "/../scripts/"+projectName+".jsx");      
       SETTINGS = project.SETTINGS;
       project.create(); 
