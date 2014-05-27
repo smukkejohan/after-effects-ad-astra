@@ -1,6 +1,20 @@
 ﻿{
 	var utils = new Object();
 	var _ = utils; // shortcut
+
+	utils.importProject = function(path) {
+		var projectFile = File(path);
+		var io = new ImportOptions(projectFile);
+		if (io.canImportAs(ImportAsType.PROJECT)){
+			io.importAs = ImportAsType.PROJECT;
+			io.file = projectFile;
+			app.project.importFile(io);
+
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	
 	// randomInt()
