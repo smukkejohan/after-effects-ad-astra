@@ -34,7 +34,12 @@ $.evalFile(PATH + "/library/prototype.jsx");
     for(var i in SubsParams.clips){
       
       var name =  SubsParams.clips[i].name;//.toString().replace('{','').replace('}','')
-      var comp = _.getItem(name);
+
+      try{
+        var comp = _.getItem(name);
+      } catch(e){
+        
+      }
       if(comp){      
         try {
           comp.replace( new File(SubsParams.clips[i].substitute) )
