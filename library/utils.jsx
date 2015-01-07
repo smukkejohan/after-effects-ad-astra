@@ -1,13 +1,26 @@
 ﻿{
 	var utils = new Object();
 	var _ = utils; // shortcut
-	
-	
+
+	utils.importProject = function(path) {
+		var projectFile = File(path);
+		var io = new ImportOptions(projectFile);
+		if (io.canImportAs(ImportAsType.PROJECT)){
+			io.importAs = ImportAsType.PROJECT;
+			io.file = projectFile;
+			app.project.importFile(io);
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	// randomInt()
-	// 
+	//
 	// Description:
 	//   Gets a random integer between two values.
-	// 
+	//
 	// Parameters:
 	//   min - The minimum value of the random number.
 	//   max - The maximum value of the random number.
@@ -19,15 +32,15 @@
 	function randomInt(min, max) {
 		return Math.floor(Math.random()*((max+1)-min)+min)
 	}
-	
-	
+
+
 	// makeStruct(names)
 	//
 	// Description:
 	// This function creates a closure that
 	// can be used to instantiate class-like
 	// data structures.
-	// 
+	//
 	// Parameters:
 	//   names - A string containing space-delimited
 	//           properties of the object.
@@ -46,7 +59,7 @@
 	  }
 	  return constructor;
 	}
-	
+
 	/*
 	** Return a substitution text parameter from the main composition
 	*/
@@ -57,15 +70,15 @@
 	    return ""
 	  }
 	}
-	
+
 	/*
 	** Load all parameters set by miranda in he mainComp into an object
 	** TODO : handle footage here also and put it in the params object
-	*/ 
+	*/
 	utils.loadParams = function() {
 	 /* var layers = mainComp.getAllLayers();
 	  var params = {};
-	  
+
 	  for(i=0; i < layers.length; i++ ) {
 	    var layer = layers[i]
 	    if(layer.name.substring(0,1) == "{") {
@@ -78,7 +91,7 @@
 //    debug.logParams(params);
 	  return SubsParams.params;
 	}
-	
+
 	/*
 	** Initiate the stage composition. Disables all parameter layers
 	** then resets and enables the stage.
@@ -89,14 +102,14 @@
 		stage.clear();
 		var stageLayer = mainComp.getLayer("stage")
     if(stageLayer){
-      stageLayer.enable();  
-      stageLayer.moveToBeginning();      
+      stageLayer.enable();
+      stageLayer.moveToBeginning();
     }
     stage.openInViewer();
-		
+
 		return stage;
 	}
-	
+
 	/*
 	** Set duration of the main composition.
 	*/
@@ -105,14 +118,14 @@
 		//mainComp.workAreaStart = 0;
 		//mainComp.workAreaDuration = time;
 	}
-	
+
 	/*
 	** Copy a template composition into a composition.
 	*/
 	utils.copyTemplate = function(templateComp, copyToComp) {
 		return utils.enhanceLayer(copyToComp.layers.add(templateComp));
 	}
-	
+
 	utils.expandLayerDuration = function(comp, duration) {
 		utils.getComp(comp.name).duration = duration;
 		for(var i = 1; i <= comp.numLayers; i++){
@@ -120,13 +133,13 @@
 			if(!layer.locked) layer.outPoint = duration - layer.inPoint;
 		}
 	}
-	
-	// TODO: change syntax to new AEComp("name") or similar 
+
+	// TODO: change syntax to new AEComp("name") or similar
 	// getComp()
-	// 
+	//
 	// Description:
 	// This function localizes the composition in the Project
-	// 
+	//
 	// Parameters:
 	//   comp - The composition name as a string, or comp as object
 	//
@@ -138,7 +151,7 @@
 		var proj = app.project;
 		for( var i = 1 ; i <= proj.numItems; i++) {
 			var item = proj.item(i);
-			if (item == comp || item.name == comp) {	  
+			if (item == comp || item.name == comp) {
 			  if(item instanceof CompItem) {
 				  // extend the returned comp with new awesome functions
 					item.clone = function(compName)                  	  			{ return utils.cloneComp(item, compName);        }
@@ -158,7 +171,7 @@
 					item.changeResolution = function(width, height, pixelAspect)	{ return utils.changeCompResolution(item, width, height, pixelAspect);}
 					return item;
 			  }
-			}	
+			}
 		}
 		//throw new Error("Item " + compName + " was not found in the project.")
 	  return null;
@@ -168,31 +181,31 @@
 		var cloneComp = utils.getComp(comp.duplicate());
 
 		if(str !== undefined){
-			cloneComp.name = str;	
+			cloneComp.name = str;
 		}
-	
+
 		return cloneComp;
 	}
-	
+
 	utils.getItem = function(itemName)
 	{
 		var proj = app.project;
 		for( var i = 1 ; i <= proj.numItems; i++) {
 			var item = proj.item(i);
 			if (item.name == itemName) {
-					
+
 				// extend the returned comp with new awesome functions
-				item.getLayer = function(layerName) { 
+				item.getLayer = function(layerName) {
 					return utils.getLayer(this, layerName);
 				}
-				item.addToComp = function(comp)     { return utils.copyTemplate(this, comp);  }		
+				item.addToComp = function(comp)     { return utils.copyTemplate(this, comp);  }
 				return item;
 			}
 		}
-		
-		throw new Error("Item " + itemName + " was not found in the project.")		
+
+		throw new Error("Item " + itemName + " was not found in the project.")
 	}
-	
+
 	// Composition specific functions
 	utils.disableAllLayers = function(comp) {
 		for(i=0; i< comp.numLayers;i++) {
@@ -200,14 +213,14 @@
 		}
 		return comp;
 	}
-	
+
 	utils.enableAllLayers = function(comp) {
 		for(i=0; i< comp.numLayers;i++) {
 			comp.getLayer(comp.layers[i+1].name).enable();
 		}
 		return comp;
 	}
-	
+
 	// remove all layers in a composition
 	utils.clearComp = function(comp) {
 		for(i=0; i< comp.numLayers;i++) {
@@ -215,7 +228,7 @@
 		}
 		return comp;
 	}
-	
+
 	utils.muteCompAndAllNestedLayers = function(comp) {
 		var layers = comp.getAllLayers();
 		for(var i=0; i<layers.length; i++){
@@ -223,10 +236,10 @@
 			if(layers[i].isComp()) utils.muteCompAndAllNestedLayers(layers[i].getComp());
 			debug.log(i + ": "+ layers[i].name);
 		}
-		
-		
+
+
 	}
-	
+
 	utils.getLayer = function(comp, layerName) {
 	  if(typeof layerName != "string" && typeof layerName != "number") {
 		  throw new TypeError("LayerName is not a valid string or integer.")
@@ -240,16 +253,16 @@
 	  } catch (e) {
 	    return null
 	  }
-	  
+
 	}
-	
+
 	utils.searchForLayer = function(comp, str) {
 		var layers = utils.getAllLayers(comp);
 		for(var i=0; i<layers.length; i++){
 			if(layers[i].name.indexOf(str) !== -1) return layers[i];
 		}
 	}
-	
+
 	utils.getAllLayers = function(comp) {
 	  var layers = []
 	  for(var i=0; i < comp.numLayers; i++) {
@@ -257,7 +270,7 @@
 	  }
 	  return layers
 	}
-	
+
 	utils.getAllCompLayers = function(comp) {
 	  var layers = utils.getAllLayers(comp)
 	  var compLayers = []
@@ -268,27 +281,27 @@
 	  }
 	  return compLayers;
 	}
-	
+
 	utils.getRandomLayer = function(comp) {
 		return comp.getLayer(rI(1,comp.numLayers));
 	}
-	
-	
+
+
 	utils.setupCamera = function(comp) {
 		var camera = comp.getCamera();
 		camera.cameraOption.depthOfField.setValueAtTime(0, 0);
 		camera.transform.property("Point of Interest").expression = "transform.position;";
 		return camera;
 	}
-	
-	utils.getCamera = function(comp) {	
+
+	utils.getCamera = function(comp) {
 		for(var i = 1; i <= comp.numLayers; i++){
 			var layer = comp.getLayer(i);
 			if(layer.matchName == "ADBE Camera Layer"){
 				return layer;
 			}
 		}
-		
+
 	}
 
 	utils.changeCompResolution = function(comp, width, height, pixelAspect) {
@@ -305,7 +318,7 @@
 
 		return newComp;
 	}
-	
+
 	/*
 	** Extend a layer with new awesome functions
 	*/
@@ -356,25 +369,25 @@
 		layer.mute            = function()                                 			{ return utils.mute(this); }
 		layer.unMute          = function()                                 			{ return utils.unMute(this); }
 		layer.copyPasteKeys   = function(keyStartTime, keyEndTime, toLayer, offset) { return utils.copyPasteKeys(this, keyStartTime, keyEndTime, toLayer, offset); }
-		
+
 		layer.getMarkerKeyTime = function(comment) {
 		  var index = this.getMarkerIndex(comment)
 		  if(index) return this.property("Marker").keyTime(index);
 		  return null
 		}
-		
+
 		layer.fadeSoundOverTime = function(volumeIn, volumeOut, inTime, outTime) {
 		  return utils.fadeSoundOverTime(this, volumeIn, volumeOut, inTime, outTime);
 		}
-		
+
 		// inline functions for manipulating the layers position
 		layer.setSize = function(dimensions, time) {
 			return utils.setLayerSize(layer, dimensions, time);
 		}
-		
+
 		layer.pos = {
-			set: function(vector, time) { 
-					return utils.setLayerPos(layer, vector, time); 
+			set: function(vector, time) {
+					return utils.setLayerPos(layer, vector, time);
 				},
 			get: function(time) {
 					return utils.getLayerPos(layer, time);
@@ -382,18 +395,18 @@
 			setX: function(x, time) { this.set(new Vec3(x,           this.getY(), this.getZ()), time); },
 			setY: function(y, time) { this.set(new Vec3(this.getX(), y,           this.getZ()), time); },
 			setZ: function(z, time) { this.set(new Vec3(this.getX(), this.getY(), z),           time); },
-			
+
 			getX: function(time)    { return this.get(time).x; },
 			getY: function(time)    { return this.get(time).y; },
 			getZ: function(time)    { return this.get(time).z; },
-			
+
 			getLowerLeft:  function(time) {return utils.getLayerCorners(layer, time)[0]; },
 			getUpperRight: function(time) {return utils.getLayerCorners(layer, time)[1]; },
-			
+
 		}
-		
+
 		if(d3) d3.enhanceLayer(layer);
-		
+
 		return layer;
 	}
 
@@ -403,7 +416,7 @@
 		if(prop.numKeys != 0){
 			t = prop.keyTime(index);
 		}
-		
+
 		var val = prop.valueAtTime(t, preExpression);
 		if(prop.propertyValueType == PropertyValueType.TwoD_SPATIAL || prop.propertyValueType == PropertyValueType.TwoD) {
 			var newVal = [];
@@ -430,7 +443,7 @@
 		}
 		return prop;
 	}
-	
+
 	utils.offsetAllKeyframesForProp = function(layer, prop, offset, preExpression) {
 		if(preExpression == undefined) preExpression = false;
 
@@ -438,10 +451,10 @@
 			utils.offsetKeyframeForProp(layer, prop, i, offset, preExpression);
 		}
 	}
-	
+
 	// Layer specific functions
-	
-	
+
+
 	utils.mute = function(layer) {
 		layer.audioEnabled = false;
 		return layer;
@@ -450,52 +463,52 @@
 		layer.audioEnabled = true;
 		return layer;
 	}
-	
+
 	utils.getCompFromLayer = function(layer) {
 		return utils.getComp(layer.source.name);
 	}
-	
+
 	utils.copyLayerToComp = function(layer, comp) {
-		
+
 		return layer.getComp().addToComp(comp);
-		
+
 	}
-	
+
 	utils.setLayerSize = function(layer, dimensions, time) {
 		if(!time)	time = 0;
-		
+
 		var position = new Vec3(layer.transform.position.value[0],
 								layer.transform.position.value[1],
 								layer.transform.position.value[2]);
-	
+
 		var transform = layer.calculateTransformFromPoints([position.x, position.y, position.z],
 														[position.x+dimensions.w, position.y, position.z],
 														[position.x+dimensions.w, position.y+dimensions.h, position.z]);
-		
+
 		for(var selector in transform) {
 			layer.transform[selector].setValueAtTime(time, transform[selector]);
 		}
-		
+
 		// this needs to use the transform object
 		return layer;
 	}
-	
+
 	utils.setLayerPos = function(layer, vec, time) {
 		if(!time)	time = 0;
 		/*debug.log("setlayerpos:");
 		debug.peekIn(vec);*/
-		
+
 		layer.Transform.Position.setValueAtTime(time, [vec.x,vec.y,vec.z]);
 		return layer;
 	}
-	
+
 	utils.getLayerPos = function(layer, time) {
 		if(!time)	time = 0;
-		
+
 		var pos = layer.Transform.Position.valueAtTime(time, false)
 		return new Vec3(pos[0], pos[1], pos[2]);
 	}
-	
+
 	utils.setLayerText = function(layer, str) {
 		layer.text.sourceText.setValue(str);
 		return layer;
@@ -512,39 +525,39 @@
 		}
 		return layer;
 	}
-	
+
 	/* POSITION FUNCTIONS wOut vectors */
 	utils.setLayerPosition = function(layer, pos, time) {
 		if(!time)	time = 0;
 		layer.Transform.Position.setValueAtTime(time, pos);
 		return layer;
 	}
-	
+
 	utils.getLayerPosition = function(layer, time) {
 		if(!time)	time = 0;
 		var pos = layer.Transform.Position.valueAtTime(time, false)
 		return pos;
 	}
-	
+
 	utils.setLayerAnchorPoint = function(layer, pos, time) {
 		if(!time)	time = 0;
 		layer.Transform.anchorPoint.setValueAtTime(time, pos);
 		return layer;
 	}
-	
+
 	utils.getLayerAnchorPoint = function(layer, time) {
 		if(!time)	time = 0;
 		var anchor = layer.Transform.anchorPoint.valueAtTime(time, false)
 		return anchor;
 	}
-	
+
 	utils.getClosetGridPoint = function(pos, gX, gY, time) {
 		if(!time)	time = 0;
 		var mX = Math.round(pos[0]/gX) * gX;
 		var mY = Math.round(pos[1]/gY) * gY;
 		return [mX, mY];
 	}
-	
+
 	utils.snapLayerToGrid = function(layer, gX, gY, time) {
 		if(!time)	time = 0;
 		var pos = layer.getPos(time);
@@ -552,26 +565,26 @@
 		layer.setPos(gridPos, time);
 		return layer;
 	}
-	
+
 	utils.getLayerOffset = function(layer, time) {
 		if(!time)	time = 0;
 		var offsetX = layer.getAnchor(time)[0] - layer.getPos(time)[0];
 		var offsetY = layer.getAnchor(time)[1] - layer.getPos(time)[1];
 		return [offsetX, offsetY];
 	}
-	
+
 	utils.findClosestPoint = function(p, vertices) {
 		var distArray = [];
 		for(i in vertices){
 			distArray.push([_.lineDistance(vertices[i], p), i, vertices[i]])
-			
+
 		}
 		var sortArray  = distArray.sort(function(a,b) { return (a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0)); });
 		return sortArray;
 	}
-	
+
 	/* POSITIONS FUNCTIONS END */
-	
+
 	utils.getLayerText = function(layer, time) {
 		if(!time)	time = 0;
 		try {
@@ -580,43 +593,43 @@
 	    return ""
 	  }
 	}
-	
+
 	utils.enableLayer = function(layer) {
 		layer.enabled = true;
 		return layer;
 	}
-	
+
 	utils.disableLayer = function(layer) {
-		layer.enabled = false;	
+		layer.enabled = false;
 		return layer;
 	}
-	
-	
+
+
 	utils.getLayerSize = function(layer, time) {
 	  if(!time)	time = 0;
 	  return new Size(layer.getWidth(time), layer.getHeight(time));
 	}
-	
+
 	utils.getLayerScale = function(layer, time) {
 	  if(!time) time = 0;
 	  return layer.scale.valueAtTime(time, false)
 	}
-	
+
 	utils.setLayerScale = function(layer, value, time) {
 	  if(!time) time = 0;
 	  return layer.scale.setValueAtTime(time, value)
 	}
-	
+
 	utils.getLayerWidth = function(layer, time) {
 		if(!time)	time = 0;
 		return layer.sourceRectAtTime(time, false).width * Math.abs(layer.getScale(time)[0])/100;
 	}
-	
+
 	utils.getLayerHeight = function(layer, time) {
 		if(!time)	time = 0;
 		return layer.sourceRectAtTime(time, false).height * Math.abs(layer.getScale(time)[1])/100;
 	}
-	
+
 
 	utils.scaleLayerToHD = function(layer, time)
 	{
@@ -636,13 +649,13 @@
 				prop.setValueAtTime(layer.startTime, [s, s, 100]);
 			}
 		}
-		
+
 
 
 
 		return layer;
 	}
-	
+
 	utils.setTimeRemap = function(layer, time) {
 		if(!time)	time = 10000;
 		if(layer.canSetTimeRemapEnabled){
@@ -651,16 +664,16 @@
 		}
 		return layer;
 	}
-	
+
 	utils.getKeyframeAtIndex = function(layer, propertyStr, index) {
 		if(!index)	index = 1;
 		var prop = layer.property(propertyStr);
 		var keyTime = prop.keyTime(index);
 		return prop.valueAtTime(keyTime, false);
 	}
-	
+
 	utils.getKeyframes = function(layer, propertyStr) {
-		
+
 		var prop = layer.property(propertyStr);
 		var keys = [];
 		for(var i=1; i<=prop.numKeys; i++) {
@@ -669,35 +682,35 @@
 		}
 		return keys;
 	}
-	
+
 	utils.setKeyframeAtTime = function(layer, propertyStr, value, time) {
 		if(!time)	time = 0;
 		var prop = layer.property(propertyStr);
 		prop.setValueAtTime(time, value);
 		return layer;
 	}
-	
+
 	utils.deleteKeyframeAtTime = function(layer, propertyStr, time) {
 		if(!time)	time = 0;
 		var prop = layer.property(propertyStr);
 		prop.removeKey(prop.nearestKeyIndex(time));
 		return layer;
 	}
-	
+
 	utils.updateKeyframeAtIndex = function(layer, propertyStr, value, index) {
 		if(!index)	index = 1;
 		var prop = layer.property(propertyStr);
 		prop.setValueAtKey(index, value);
 		return layer;
 	}
-	
+
 	utils.setEaseAtKeyIndex = function(layer, propertyStr, value1, value2, index) {
 		if(!index)	index = 1;
 		var prop = layer.property(propertyStr);
-		
+
 		var easeIn = [];
 		var easeOut = [];
-		
+
 		for(i in value1) {
 			var easeInObj = new KeyframeEase(value1[i][0], value1[i][1]);
 			easeIn.push(easeInObj);
@@ -707,16 +720,16 @@
 		prop.setTemporalEaseAtKey(index, easeIn, easeOut);
 		return layer;
 	}
-	
+
 	/*
-	** Return the lowerLeft and upperRight of a flat plane in 3D space 
+	** Return the lowerLeft and upperRight of a flat plane in 3D space
 	*/
 	utils.getLayerCorners = function(layer, time) {
 		if(!time)	time = 0;
-		
+
 		var scale = layer.scale.valueAtTime(time, false);
 		var rect = layer.sourceRectAtTime(0, false);
-		
+
 		var lowerLeft  = new Vec3(
 			layer.pos.getX(time) + rect.left* Math.abs(scale[0])/100,
 			layer.pos.getY(time) + layer.getHeight(time) + rect.top*Math.abs(scale[0])/100,
@@ -727,10 +740,10 @@
 		  layer.pos.getY(time) + rect.top*Math.abs(scale[0])/100,
 			layer.pos.getZ(time),
 		);
-		
+
 		return [lowerLeft, upperRight]
 	}
-	
+
 	utils.cloneLayer = function(layer, str) {
 		var clone = utils.enhanceLayer(layer.duplicate());
 		if(str){
@@ -744,9 +757,9 @@
 		var cloneComp = utils.getComp(origComp.duplicate());
 
 		if(str !== undefined){
-			cloneComp.name = str;	
+			cloneComp.name = str;
 		}
-	
+
 		layer.replaceSource(cloneComp,false);
 		return layer;
 	}
@@ -761,7 +774,7 @@
 		return clone;
 	}
 
-	utils.deepCloneComp = function(comp, str){	
+	utils.deepCloneComp = function(comp, str){
 		debug.log("Clone comp "+comp.name);
 		var clone = utils.getComp(comp.duplicate());
 
@@ -799,19 +812,19 @@
 			var l = comp.layer(i);
 			if(l.name.indexOf(prefix) !== -1){
 				removeLayers.push(l);
-			}	
+			}
 		}
 		for(i in removeLayers) {
 			removeLayers[i].remove();
 		}
 	}
-	
-	
+
+
 	utils.getLayerMarkerIndexByComment = function(layer, comment)
   {
     try{
       	var markers = layer.property("Marker");
-		  var numMarkers = markers.numKeys;	
+		  var numMarkers = markers.numKeys;
 		  for(var i = 1; i <= numMarkers; i++){
   			if(markers.keyValue(i).comment.toString()){
 					//alert("|"+markers.keyValue(i).comment.toString()+"|");
@@ -819,13 +832,13 @@
   					return i;
   				}
   			}
-  		};	
+  		};
 		} catch(exception) {
   		return null;
   	}
   }
-	
-	
+
+
 	utils.getLayerMarkerTimeByComment = function(layer, comment)
   {
     try{
@@ -840,7 +853,7 @@
 
 	utils.getMaskByName = function(layer, str) {
 		if(!str)	str = 1;
-		
+
 		var masksGroup = layer.property("ADBE Mask Parade");
 		var mask;
 		if(masksGroup.property(str)){
@@ -848,10 +861,10 @@
 		} else {
 			mask = undefined;
 		}
-		
+
 		return mask;
 	}
-	
+
 	utils.addMaskToLayer = function(layer, arr) {
 		mask = layer.Masks.addProperty("Mask");
 		maskShape = mask.property("maskShape");
@@ -884,22 +897,22 @@
 		mask.offset      = function(arr) { return utils.offsetMaskPosition(this, arr); }
 		mask.getAvrPoint = function()    { return utils.getMaskPathAveragePoint(this); }
 		mask.setDirection= function(str) { return utils.setMaskVerticesDirection(this, str); }
-		
+
 		mask.debugPairs  = function()    { return utils.roundMaskVerticesPairs(this); }
 		return mask;
 	}
-	
+
 	utils.getMaskAnchor = function(mask) {
 		return mask.anchor;
 	}
-	
+
 	utils.setMaskAnchor = function(mask, pos) {
 		mask.anchor = pos;
 		return mask;
 	}
 
 	utils.setMaskVerticesDirection = function(mask, str) {
-		
+
 		var a = mask.getAvrPoint();
 		var maskPath = mask.getVertices();
 		var angle1_A = _.calcAngle(maskPath[0],a);
@@ -909,42 +922,42 @@
 		mask.debugPairs();
 		if(angleSum > 0){
 			debug.log("CONCLUSION: PATH IS CW");
-			
+
 			if(str == "CCW") {
 				mask.setVertices(maskPath.reverse());
 				debug.log(" - should be CCW; reverse the current path")
 				mask.debugPairs();
 			}
-			
+
 		} else {
 			debug.log("CONCLUSION: PATH IS CCW");
-			
+
 			if(str == "CW") {
 				mask.setVertices(maskPath.reverse());
 				debug.log(" - should be CW; reverse the current path")
 				mask.debugPairs();
 			}
 		}
-		
+
 		return mask;
 	}
-	
+
 	utils.getMaskPath = function(mask) {
 		var path = mask.property("ADBE Mask Shape");
 		return path;
 	}
-	
+
 	utils.getMaskVertices = function(mask) {
 		return mask.getPath().value.vertices;
 	}
-	
+
 	utils.setMaskVertices = function(mask, newVerts) {
 		var newPath = mask.getPath().value;
 		newPath.vertices = newVerts;
 		mask.getPath().setValue(newPath);
 		return mask;
 	}
-	
+
 	utils.getMaskWidth = function(mask) {
 		var verts    = mask.getVertices();
 		var sortedX  = verts.sort(function(a,b) { return (a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0)); });
@@ -952,7 +965,7 @@
 		var maxX     = sortedX[sortedX.length-1][0];
 		return maxX - minX;
 	}
-	
+
 	// this is not done!
 	utils.setMaskWidth = function(mask, w) {
 		var verts    = mask.getVertices();
@@ -961,16 +974,16 @@
 		var left2    = sortedX[1];
 		var right1   = sortedX[sortedX.length-2];
 		var right2   = sortedX[sortedX.length-1];
-		
+
 		// TOP-LEFT = 0, TOP-RIGHT = 1, BOTTOM-RIGHT = 2, BOTTOM-LEFT = 3;
-		
+
 		if(left1[1] > left2[1]) {
-			
+
 		}
-		
+
 		return maxX - minX;
 	}
-	
+
 	utils.getMaskPathAveragePoint = function(mask) {
 		var verts    = mask.getVertices();
 		var ySum = 0;
@@ -981,39 +994,39 @@
 		}
 		return [xSum/verts.length, ySum/verts.length];
 	}
-	
+
 	utils.getMaskHeight = function(mask) {
 		var minY     = mask.getMinY();
 		var maxY     = mask.getMaxY();
 		return maxY - minY;
 	}
-	
+
 	utils.getMaskMinX = function(mask) {
 		var verts = mask.getVertices();
 		var sortedX  = verts.sort(function(a,b) { return (a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0)); });
 		return sortedX[0][0];
 	}
-	
+
 	utils.getMaskMaxX = function(mask) {
 		var verts = mask.getVertices();
 		var sortedX  = verts.sort(function(a,b) { return (a[0] < b[0] ? -1 : (a[0] > b[0] ? 1 : 0)); });
 		sortedX = sortedX.reverse()
 		return sortedX[0][0];
 	}
-	
+
 	utils.getMaskMinY = function(mask) {
 		var verts   = mask.getVertices();
 		var sortedY = verts.sort(function(a,b) { return (a[1] < b[1] ? -1 : (a[1] > b[1] ? 1 : 0)); });
 		return sortedY[0][1];
 	}
-	
+
 	utils.getMaskMaxY = function(mask) {
 		var verts   = mask.getVertices();
 		var sortedY = verts.sort(function(a,b) { return (a[1] < b[1] ? -1 : (a[1] > b[1] ? 1 : 0)); });
 		sortedY = sortedY.reverse();
 		return sortedY[0][1];
 	}
-	
+
 	utils.setMaskPosition = function(mask, pos) {
 		var verts = mask.getVertices();
 		var offsetX = mask.getMinX() - pos[0] - mask.anchor[0];
@@ -1025,13 +1038,13 @@
 		}
 		return mask.setVertices(newVerts);
 	}
-	
+
 	utils.getMaskPosition = function(mask) {
 		var x = mask.getMinX() + mask.anchor[0];
 		var y = mask.getMinY() + mask.anchor[1];
 		return [x,y];
 	}
-	
+
 	utils.offsetMaskPosition = function(mask, offset) {
 		var verts = mask.getVertices();
 		var newVerts = [];
@@ -1041,7 +1054,7 @@
 		}
 		return mask.setVertices(newVerts);
 	}
-	
+
 	utils.roundMaskVerticesPairs = function(mask) {
 		var verts = mask.getVertices();
 		debug.log("Rounded vertices for mask: "+mask.name)
@@ -1051,24 +1064,24 @@
 		}
 		debug.log("\n")
 	}
-	
+
 	utils.fadeSoundOverTime = function(layer, volumeIn, volumeOut, inTime, outTime)
 	{
 		debug.log("FADE SOUND\n"+layer.name+"\nVol: "+volumeIn+" -> "+volumeOut+"\nTime: "+inTime+" -> "+outTime);
-		
+
 		try{
 			layer.property("Audio Levels").setValueAtTime(inTime, [volumeIn, volumeIn]);
 			layer.property("Audio Levels").setValueAtTime(outTime, [volumeOut, volumeOut]);
-			
+
 		} catch (exception){
 			debug.log('DR ERROR | fadeSoundOverTime | Could not fade audio for: '+layer.name+' - exception ' + exception.toString());
 		}
-		
+
 		return layer
 	}
-	
-	
-	
+
+
+
 	// Find least common denominator for all numbers in array
 	//+ Jonas Raoni Soares Silva
   // http://jsfromhell.com/math/mmc [rev. #1]
@@ -1093,12 +1106,12 @@
 	    var _rand, _lcd;
 	    var _weights = [];
 	    var _select = [];
-	    
+
 	    for (var i = 0; i < data.length; i++) {
         _weights.push[Math.ceil(data[i][1])]
       }
 	    _lcd = mmc(_weights);
-	 		
+
 	    // cycle through the data and populate _select
 	    for (var i = 0; i < data.length; i++) {
 	        // add each item weight times
@@ -1106,84 +1119,84 @@
 	            _select.push(data[i][0]);
 	        }
 	    }
-			if (!_select.length) return null;			
+			if (!_select.length) return null;
 			// randomly pick one
 	    _rand = Math.floor(Math.random() * _select.length);
 	    return _select[_rand];
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	/*
 	** Get a random position outside the viewport in 0, 90, 180 or 270 degrees from a vector point
 	*/
-	
+
 	utils.randomPos = function(vector, layer) {
 		var compW  = layer.containingComp.width;
 		var compH  = layer.containingComp.height;
 		var offset = 20;
-		
+
 		var w = layer.getWidth();
 		var h = layer.getHeight();
-		
+
 		var x, y;
-		
+
 		var r = rI(0,3);
-		
+
 		if(r == 0){ // op
 			x = vector.x;
-			y = -h - offset;	
-					
+			y = -h - offset;
+
 		} else if (r == 1){ // ned
 			x = vector.x;
 			y = compH + offset;
-			
+
 		} else if (r == 2){ // højre
 			x = compW + offset;
 			y = vector.y;
-			
+
 		} else if (r == 3){ // venstre
 			x = -w - offset;
 			y = vector.y;
-			
+
 		}
-		
+
 		return new Vec3(x,y,0);
 	}
-	
+
 	//var testWeightedRandomData = [["A",3],["B",2],["c",10]];
 	//alert(wRand(testWeightedRandomData));
-	
+
 	// rd_MasksToShapes_doIt()
-	// 
+	//
 	// Description:
 	// This callback function performs the main operation.
-	// 
+	//
 	// Parameters:
 	// None.
-	// 
+	//
 	// Returns:
 	// Nothing
 	//
 	utils.rd_MasksToShapes_doIt = function(masksLayer) {
 		var masksGroup = masksLayer.property("ADBE Mask Parade");
-		
+
 		// Create an empty shape layer
 		var suffix = " Shapes";
 		var shapeLayer = masksLayer.containingComp.layers.addShape();
 		shapeLayer.name =  masksLayer.name.substr(0,31-suffix.length) + suffix;
 		shapeLayer.moveBefore(masksLayer);
-		
+
 		var shapeLayerContents = shapeLayer.property("ADBE Root Vectors Group");
 		var shapeGroup = shapeLayerContents; //.addProperty("ADBE Vector Group");
 		//shapeGroup.name = "Masks";
 		var shapePathGroup, shapePath, shapePathData;
-		
+
 		// Get the mask layer's pixel aspect; if layer has no source, use comp's pixel aspect
 		var pixelAspect = (masksLayer.source != null) ? masksLayer.source.pixelAspect : 1.0; //comp.pixelAspect;
-		
+
 		// Iterate over the masks layer's masks, converting their paths to shape paths
 		var mask, maskPath, vertices;
 		for (var m=1; m<=masksGroup.numProperties; m++)
@@ -1191,26 +1204,26 @@
 			// Get mask info
 			mask = masksGroup.property(m);
 			maskPath = mask.property("ADBE Mask Shape");
-			
+
 			// Create new shape path using mask info
 			shapePathGroup = shapeGroup.addProperty("ADBE Vector Shape - Group");
 			shapePathGroup.name = mask.name;
 			shapePath = shapePathGroup.property("ADBE Vector Shape");
-			
+
 			shapePathData = new Shape();
-			
+
 			// ...adjust mask vertices (x axis) by pixel aspect
 			vertices = new Array();
 			for (var v=0; v<maskPath.value.vertices.length; v++)
 				vertices[vertices.length] = [maskPath.value.vertices[v][0] * pixelAspect, maskPath.value.vertices[v][1]];
 			shapePathData.vertices = vertices;
-			
+
 			shapePathData.inTangents = maskPath.value.inTangents;
 			shapePathData.outTangents = maskPath.value.outTangents;
 			shapePathData.closed = maskPath.value.closed;
 			shapePath.setValue(shapePathData);
 		}
-		
+
 		// Match the mask layer's transforms
 		shapeLayer.transform.anchorPoint.setValue(masksLayer.transform.anchorPoint.value);
 		shapeLayer.transform.position.setValue(masksLayer.transform.position.value);
@@ -1228,18 +1241,18 @@
 			shapeLayer.transform.rotation.setValue(masksLayer.transform.rotation.value);
 		}
 		shapeLayer.transform.opacity.setValue(masksLayer.transform.opacity.value);
-		
+
 		// Mute the mask layer
 		masksLayer.enabled = false;
-		
+
 		return masksLayer;
-		
+
 	}
-	
-	
+
+
 
 	/* MATH */
-	
+
 	utils.lineDistance = function( point1, point2 ) {
 	  var xs = 0;
 	  var ys = 0;
@@ -1251,24 +1264,24 @@
 
 	  return Math.sqrt( xs + ys );
 	}
-	
+
 	utils.calcAngle = function(p1, p2) {
 		var x1, x2, y1, y2, deltaY, deltaX;
 		x1 = p1[0];
 		y1 = p1[1];
 		x2 = p2[0];
 		y2 = p2[1];
-		
+
 		deltaY = y2 - y1;
 		deltaX = x2 - x1;
-		
+
 		angleInDegrees = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-		
+
 		if(angleInDegrees<0) + 360;
-		
+
 		return angleInDegrees;
 	}
-	
+
 	utils.dynamicSort = function(property) {
     var sortOrder = 1;
     if(property[0] === "-") {
