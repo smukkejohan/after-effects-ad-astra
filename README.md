@@ -12,12 +12,11 @@ N is a placeholder for the item number. e.g. {DURATION-1} specifies the duration
 Times, and durations are specified in the format "minutes:seconds:frames" e.g. "00:07:10".
 
 # Miranda IRS
-The scripts are made for injection in the Miranda IRS rendering service. 
-
+The scripts are made for injection in the Miranda IRS rendering service.
+Miranda IRS has been deprecated in favor of out custom GMAB render server. The XML format is however still IRS compatible.
 
 ## XML Validation
-Link to breaktools
-
+Breaktools is deprecated. GMAB is responsible for validation.
 
 # Code Guidelines
 
@@ -33,7 +32,7 @@ __construct
 
 this.create
 	If the object does something that is dependent on local variables being accesible through a parent scope then this it where it starts.
-	
+
 __construct() should go in the bottom of all functions so that all definitions have been made before execution.
 
 
@@ -52,11 +51,10 @@ then it closes in
 
 
 
-# BEST PRACTICES 
+# BEST PRACTICES
 Do not redeclare global variables for an object inside inline functions. Then the global will be set to undefined in lines preceding.
 
-
-If you are parsing objects to a function more than once in an instance you should instantiate it as an object with the new keyword. 
+If you are parsing objects to a function more than once in an instance you should instantiate it as an object with the new keyword.
 
 
 
@@ -70,32 +68,30 @@ Marks notes for 3d calculations:
 
 	This script assumes a film size
 	of 100mm in the camera in AE.
-	
+
 	The time-code we are operating
 	with is fixed at the moment. It
 	should ideally be fetched from
 	the keyframe marker in AE. Look
 	for the "time" variable.
-	
+
 	The text-transform function is
 	currently rudimentary. While it
 	does a basic job, it needs to be
 	expanded to handle actual text
 	sizes.
-	
+
 	A method of moving the camera
 	according to the sign composition
 	needs to be implemented.
-	
+
 	Code is sensibly commented, apart
 	from most of the vector math. If
-	in doubt, ask maqp@dr.dk. 
-	
+	in doubt, ask maqp@dr.dk.
+
 	That should be all :P
 
 */
 // ---------------------------------- //
 // ---------------------------------- //
 // ---------------------------------- //
-
-
