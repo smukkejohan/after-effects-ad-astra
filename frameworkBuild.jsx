@@ -93,6 +93,8 @@ $.evalFile(PATH + "/library/prototype.jsx");
 			projectName = SubsParams.projectName;
       projectVersion = SubsParams.projectVersion;
 
+      SubsParams.params['BASEPATH'] =  new File($.fileName).parent.parent.path;
+
       // get all subprojects
       if(File(PATH + "/../subprojects/subprojects.jsx").exists){
         $.evalFile(PATH + "/../subprojects/subprojects.jsx");
