@@ -16,6 +16,18 @@
 		}
 	}
 
+
+  utils.importFootage = function(path) {
+    var file = File(path);
+    var io = new ImportOptions(file);
+    if (io.canImportAs(ImportAsType.FOOTAGE)) {
+      io.importAs = ImportAsType.FOOTAGE;
+      io.file = file;
+      return  _.getItem(app.project.importFile(io).name);
+    }
+    return false;
+  }
+
 	// randomInt()
 	//
 	// Description:
