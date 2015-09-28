@@ -522,6 +522,7 @@
 	}
 
 	utils.setLayerText = function(layer, str) {
+		if(str == undefied) str = "";
 		layer.text.sourceText.setValue(str);
 		return layer;
 	}
