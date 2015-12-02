@@ -42,38 +42,46 @@ $.evalFile(PATH + "/library/prototype.jsx");
       }
       if(comp){      
         try {
-          comp.replace( new File(SubsParams.clips[i].substitute) )
+          var fn = new File(SubsParams.clips[i].substitute);
+          if(fn.exists) {
 
-          var match = SubsParams.clips[i].name.toString().match(/\{((\S+)-\d)\}/);
-          
-          if(match){
-            var usageComp = utils.getComp( match[1] )
-            if(usageComp){                            
-              var layers = usageComp.getAllLayers();
-              for(var i=0; i<layers.length; i++){
-                try{
-                  layers[i].scaleToHD();
-                } catch(e){}
-                
-                layers[i].setTimeRemap();
-              }            
+            comp.replace(fn)
+            remoteLog("Imported " + SubsParams.clips[i].substitute, "debug")
+
+            var match = SubsParams.clips[i].name.toString().match(/\{((\S+)-\d)\}/);
+
+            if (match) {
+              var usageComp = utils.getComp(match[1])
+              if (usageComp) {
+                var layers = usageComp.getAllLayers();
+                for (var i = 0; i < layers.length; i++) {
+                  try {
+                    layers[i].scaleToHD();
+                  } catch (e) {
+                  }
+
+                  layers[i].setTimeRemap();
+                }
+              }
+
+              var usageComp2 = utils.getComp(match[2])
+              if (usageComp2) {
+                var layers = usageComp2.getAllLayers();
+                for (var i = 0; i < layers.length; i++) {
+                  try {
+                    layers[i].scaleToHD();
+                  } catch (e) {
+                  }
+
+                  layers[i].setTimeRemap();
+                }
+              }
             }
-
-            var usageComp2 = utils.getComp( match[2])
-            if(usageComp2){
-              var layers = usageComp2.getAllLayers();
-              for(var i=0; i<layers.length; i++){
-                try{
-                  layers[i].scaleToHD();
-                } catch(e){}
-
-                layers[i].setTimeRemap();
-              }            
-            }
+          } else {
+            remoteLog("Could not import "+SubsParams.clips[i].substitute+" file is missing", "error")
           }
-         
-          
         } catch(e) {
+          remoteLog("Could not import "+SubsParams.clips[i].substitute+ " Error: "+e.message, "error")
           //$.write("Could not replace "+name+" "+e.message)
         }
       }
