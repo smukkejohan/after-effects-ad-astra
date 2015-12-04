@@ -189,6 +189,10 @@
 	  return null;
 	}
 
+	utils.createComp = function(str){
+		return utils.getComp(app.project.items.addComp(str, 1920, 1080, 1, 10, 25));
+	}
+
 	utils.cloneComp = function(comp, str) {
 		var cloneComp = utils.getComp(comp.duplicate());
 

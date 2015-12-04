@@ -1,6 +1,6 @@
-﻿// Debugging level 
+﻿// Debugging level
 //  0: No debugging
-//  1: Break on runtime errors 
+//  1: Break on runtime errors
 //  2: Full debug mode // note this is set in miranda.jsx
 //$.level = 2;
 var PATH = new File($.fileName).path;
@@ -11,36 +11,36 @@ $.evalFile(PATH + "/library/prototype.jsx");
 {
   var SETTINGS;
 	var OS = $.os;
-  
+
   // The order of theese includes matters!
   $.evalFile(PATH + "/library/debug.jsx");
   $.evalFile(PATH + "/library/log.jsx");
   $.evalFile(PATH + "/library/fonts.jsx");
-  
+
   $.evalFile(PATH + "/library/utils.jsx");
   $.evalFile(PATH + "/library/utils_keys.jsx");
-  
+
   $.evalFile(PATH + "/library/vectorMath.jsx");
   $.evalFile(PATH + "/library/3d.jsx");
-  
+
   $.evalFile(PATH + "/library/paragraph.jsx");
   $.evalFile(PATH + "/library/paragraph2D.jsx");
-  
-  
+
+
 	// Define Global variables
 	var mainComp, projectName, project, path, projectVersion;
 
   var handleFootage = function(){
     for(var i in SubsParams.clips){
-      
+
       var name =  SubsParams.clips[i].name;//.toString().replace('{','').replace('}','')
 
       try{
         var comp = _.getItem(name);
       } catch(e){
-        
+
       }
-      if(comp){      
+      if(comp){
         try {
           var fn = new File(SubsParams.clips[i].substitute);
           if(fn.exists) {
@@ -88,15 +88,18 @@ $.evalFile(PATH + "/library/prototype.jsx");
     }
   }
 
- 
-  
+
+
 	var build = function() {
-		if( !app.project ) {		  
+		if( !app.project ) {
 		  throw new Error("No project is loaded")
-		} else {		
+		} else {
       handleFootage();
 
-			mainComp = new Object(_.getComp('stage'));
+			mainComp = _.getComp('stage');
+      if(!mainComp){
+        mainComp = _.createComp('stage');
+      }
 
 			projectName = SubsParams.projectName;
       projectVersion = SubsParams.projectVersion;
@@ -109,13 +112,13 @@ $.evalFile(PATH + "/library/prototype.jsx");
       }
 
       // get project file
-      $.evalFile(PATH + "/../scripts/"+projectName+".jsx");      
+      $.evalFile(PATH + "/../scripts/"+projectName+".jsx");
       SETTINGS = project.SETTINGS;
-      project.create(); 
+      project.create();
 		}
 	}
-	
-	app.beginUndoGroup("UNDO LOVENEST");	
-  build();  
+
+	app.beginUndoGroup("UNDO LOVENEST");
+  build();
 	app.endUndoGroup();
 }
