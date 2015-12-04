@@ -46,6 +46,12 @@
 	}
 
 
+	// convert time string to seconds
+	function parseTime(str){
+		return Number(currentFormatToTime(str, 25, false));
+	}
+
+
 	// makeStruct(names)
 	//
 	// Description:
@@ -169,6 +175,7 @@
 					item.clone = function(compName)                  	  			{ return utils.cloneComp(item, compName);        }
 					item.getLayer = function(layerName)                   			{ return utils.getLayer(item, layerName);        }
 					item.searchLayer = function(str)                      			{ return utils.searchForLayer(item, str);        }
+					item.searchLayers = function(str)                      			{ return utils.searchForLayers(item, str);        }
 					item.clear = function()                               			{ return utils.clearComp(item);                  }
 					item.mute = function()                                			{ return utils.muteCompAndAllNestedLayers(item); }
 					item.disableAll = function()                          			{ return utils.disableAllLayers(item);           }
@@ -275,8 +282,25 @@
 	utils.searchForLayer = function(comp, str) {
 		var layers = utils.getAllLayers(comp);
 		for(var i=0; i<layers.length; i++){
-			if(layers[i].name.indexOf(str) !== -1) return layers[i];
+			if(str instanceof RegExp){
+				if(layers[i].name.match(str)) return layers[i];
+			} else {
+				if(layers[i].name.indexOf(str) !== -1) return layers[i];
+			}
 		}
+	}
+
+	utils.searchForLayers = function(comp, str) {
+		var layers = utils.getAllLayers(comp);
+		var ret = [];
+		for(var i=0; i<layers.length; i++){
+			if(str instanceof RegExp){
+				if(layers[i].name.match(str)) ret.push(layers[i]);
+			} else {
+				if(layers[i].name.indexOf(str) !== -1) ret.push(layers[i]);
+			}
+		}
+		return ret;
 	}
 
 	utils.getAllLayers = function(comp) {
@@ -341,9 +365,9 @@
 	utils.enhanceLayer = function(layer) {
 
 		layer.setText         = function(str)                              			{ return utils.setLayerText(this, str); }
-		layer.getText         = function()		                           			   { return utils.getLayerText(this); }
-		layer.getFontSize     = function()		                           			   { return utils.getFontSize(this); }
-		layer.setTextColor	  = function(color)							   			{ return utils.setLayerTextColor(this, color); }
+		layer.getText         = function()		                           			  { return utils.getLayerText(this); }
+		layer.getFontSize     = function()		                           			  { return utils.getFontSize(this); }
+		layer.setTextColor	  = function(color)							   									{ return utils.setLayerTextColor(this, color); }
 		layer.enable          = function()                                 			{ return utils.enableLayer(this); }
 		layer.disable         = function()                                 			{ return utils.disableLayer(this); }
 		layer.getScale        = function(time)                             			{ return utils.getLayerScale(this, time); }
@@ -357,6 +381,8 @@
 		//layer.deepClone       = function(str)                            			  { return utils.deepCloneLayer(this, str); }
 		layer.scaleToHD       = function(time)                             			{ return utils.scaleLayerToHD(this, time); }
 		layer.setTimeRemap    = function(time)                             			{ return utils.setTimeRemap(this, time); }
+		layer.setInTime 			= function(time)																	{ return utils.setInTime(this, time); }
+		layer.setOutTime 			= function(time)																	{ return utils.setOutTime(this, time); }
 		layer.addToComp       = function(comp)                             			{ return utils.copyLayerToComp(this, comp); }
 		layer.getComp         = function()                                 			{ return utils.getCompFromLayer(this); }
 		layer.isComp          = function()                                 			{ return (this.source instanceof CompItem) }
@@ -376,11 +402,11 @@
 		layer.setKey          = function(propStr, value, time)             			{ return utils.setKeyframeAtTime(this, propStr, value, time); }
 		layer.deleteKey       = function(propStr, time)                    			{ return utils.deleteKeyframeAtTime(this, propStr, time); }
 		layer.updateKey       = function(propStr, value, index)            			{ return utils.updateKeyframeAtIndex(this, propStr, value, index); }
-		layer.offsetAllKeys   = function(prop, offset, preExpression)   			{ return utils.offsetAllKeyframesForProp(this, prop, offset, preExpression); }
-		layer.offsetKey       = function(prop, index, offset, preExpression)   		{ return utils.offsetKeyframeForProp(layer, prop, index, offset, preExpression); }
+		layer.offsetAllKeys   = function(prop, offset, preExpression) 	  			{ return utils.offsetAllKeyframesForProp(this, prop, offset, preExpression); }
+		layer.offsetKey       = function(prop, index, offset, preExpression) 		{ return utils.offsetKeyframeForProp(layer, prop, index, offset, preExpression); }
 		layer.easeKey         = function(prop, value1, value2, index)      			{ return utils.setEaseAtKeyIndex(this, prop, value1, value2, index); }
 		layer.selectKeys      = function(inTime, outTime)                  			{ return utils.selectPropKeys(this, inTime, outTime); }
-		layer.moveAllKeys	  = function(inTime, outTime, offset)					{ return utils.movePropKeys(this, inTime, outTime, offset); }
+		layer.moveAllKeys	  	= function(inTime, outTime, offset)								{ return utils.movePropKeys(this, inTime, outTime, offset); }
 		layer.moveKeys        = function(propStr, inTime, outTime, offset) 			{ return utils.movePropKeys(this, propStr, inTime, outTime, offset); }
 		layer.mute            = function()                                 			{ return utils.mute(this); }
 		layer.unMute          = function()                                 			{ return utils.unMute(this); }
@@ -678,6 +704,24 @@
 		if(layer.canSetTimeRemapEnabled){
 			layer.timeRemapEnabled = true;
 			layer.outPoint = time;
+		}
+		return layer;
+	}
+
+	utils.setInTime = function(layer, time){
+		if(layer.isComp()){
+			layer.startTime = time;
+		} else {
+			layer.startTime = time + layer.startTime-layer.inPoint;
+		}
+		return layer;
+	}
+
+	utils.setOutTime = function(layer, time){
+		if(layer.isComp()){
+			layer.startTime = time - (layer.outPoint - layer.inPoint);
+		} else {
+			layer.startTime = time + layer.startTime-layer.inPoint  - (layer.outPoint - layer.inPoint);
 		}
 		return layer;
 	}

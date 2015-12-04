@@ -34,11 +34,11 @@ $.evalFile(PATH + "/library/prototype.jsx");
     for(var i in SubsParams.clips){
 
       var name =  SubsParams.clips[i].name;//.toString().replace('{','').replace('}','')
-
+      remoteLog("Try to import "+name);
       try{
         var comp = _.getItem(name);
       } catch(e){
-
+        remoteLog("Could not find footage composition "+name);
       }
       if(comp){
         try {
