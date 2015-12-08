@@ -79,17 +79,6 @@
 	}
 
 	/*
-	** Return a substitution text parameter from the main composition
-	*/
-	utils.getParam = function(name) {
-	  try {
-		  return mainComp.layer("{"+name+"}").text.sourceText.valueAtTime(0, false).toString();
-	  } catch (e) {
-	    return ""
-	  }
-	}
-
-	/*
 	** Load all parameters set by miranda in he mainComp into an object
 	** TODO : handle footage here also and put it in the params object
 	*/
@@ -110,6 +99,27 @@
 	  return SubsParams.params;
 	}
 
+	utils.getStringParam = function(str){
+		return SubsParams.params[str];
+	}
+	utils.getBoolParam = function(str){
+		var val = utils.getStringParam(str);
+		if(!val) return false;
+		switch (val.toLowerCase()) {
+			case "true":
+			case "1":
+				return true;
+		}
+		return false
+	}
+
+	utils.getTimeParam = function(str){
+		var val = utils.getStringParam(str);
+		if(!val){
+			return false;
+		}
+		return parseTime(val);
+	}
 	/*
 	** Initiate the stage composition. Disables all parameter layers
 	** then resets and enables the stage.
@@ -719,7 +729,7 @@
 
 	utils.setOutTime = function(layer, time){
 		if(layer.isComp()){
-			layer.startTime = time - (layer.outPoint - layer.inPoint);
+			layer.startTime = time - (layer.outPoint - layer.startTime);
 		} else {
 			layer.startTime = time + layer.startTime-layer.inPoint  - (layer.outPoint - layer.inPoint);
 		}
