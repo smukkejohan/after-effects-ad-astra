@@ -31,10 +31,10 @@ $.evalFile(PATH + "/library/prototype.jsx");
 	var mainComp, projectName, project, path, projectVersion;
 
   var handleFootage = function(){
-    for(var i in SubsParams.clips){
+    for(var i=0;i<SubsParams.clips.length;i++){
 
       var name =  SubsParams.clips[i].name;//.toString().replace('{','').replace('}','')
-      remoteLog("Try to import "+name);
+      remoteLog("Try to import "+name); 
       try{
         var comp = _.getItem(name);
       } catch(e){
