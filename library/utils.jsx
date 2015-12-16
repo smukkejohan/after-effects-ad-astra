@@ -207,7 +207,7 @@
 				  // extend the returned comp with new awesome functions
 					item.clone = function(compName)                  	  			{ return utils.cloneComp(item, compName);        }
 					item.getLayer = function(layerName)                   			{ return utils.getLayer(item, layerName);        }
-					item.layerExists = function(layerName)                   			{ return utils.layerExists(item, layerName);        }					
+					item.layerExists = function(layerName)                   			{ return utils.layerExists(item, layerName);        }
 					item.searchLayer = function(str)                      			{ return utils.searchForLayer(item, str);        }
 					item.searchLayers = function(str)                      			{ return utils.searchForLayers(item, str);        }
 					item.clear = function()                               			{ return utils.clearComp(item);                  }
@@ -234,6 +234,11 @@
 		return utils.getComp(app.project.items.addComp(str, 1920, 1080, 1, 10, 25));
 	}
 
+	//color array [R, G, B] 0-1
+	utils.createSolid = function(comp,str, color){
+		return comp.getLayer(comp.layers.addSolid(color, str, 1920, 1080, 1, 10).name);
+	}
+
 	utils.cloneComp = function(comp, str) {
 		var cloneComp = utils.getComp(comp.duplicate());
 
@@ -249,7 +254,7 @@
 		var proj = app.project;
 		for( var i = 1 ; i <= proj.numItems; i++) {
 			var item = proj.item(i);
-			if (item.name == itemName) {
+			if (item == itemName || item.name == itemName) {
 
 				// extend the returned comp with new awesome functions
 				item.getLayer = function(layerName) {
