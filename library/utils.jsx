@@ -207,6 +207,7 @@
 				  // extend the returned comp with new awesome functions
 					item.clone = function(compName)                  	  			{ return utils.cloneComp(item, compName);        }
 					item.getLayer = function(layerName)                   			{ return utils.getLayer(item, layerName);        }
+					item.layerExists = function(layerName)                   			{ return utils.layerExists(item, layerName);        }					
 					item.searchLayer = function(str)                      			{ return utils.searchForLayer(item, str);        }
 					item.searchLayers = function(str)                      			{ return utils.searchForLayers(item, str);        }
 					item.clear = function()                               			{ return utils.clearComp(item);                  }
@@ -334,6 +335,23 @@
 			}
 		}
 		return ret;
+	}
+
+	utils.layerExists = function(comp, layerName){
+		if(typeof layerName != "string" && typeof layerName != "number") {
+		  throw new TypeError("LayerName is not a valid string or integer.")
+		}
+	  try {
+		  var layer = comp.layer(layerName);
+		  if (isValid(layer)) {
+ 				return true;
+		  }
+			return false;
+		  return utils.enhanceLayer(layer);
+	  } catch (e) {
+	    return false;
+	  }
+
 	}
 
 	utils.getAllLayers = function(comp) {

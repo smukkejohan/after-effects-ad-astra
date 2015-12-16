@@ -34,14 +34,15 @@ $.evalFile(PATH + "/library/prototype.jsx");
     for(var i=0;i<SubsParams.clips.length;i++){
 
       var name =  SubsParams.clips[i].name;//.toString().replace('{','').replace('}','')
-      remoteLog("Try to import "+name); 
+      remoteLog("Try to import "+name);
       try{
         var comp = _.getItem(name);
       } catch(e){
         remoteLog("Could not find footage composition "+name);
+        comp = undefined;
       }
       if(comp){
-      //  try {      
+      //  try {
           var fn = new File(SubsParams.clips[i].substitute);
           if(fn.exists) {
 
