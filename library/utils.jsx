@@ -120,6 +120,29 @@
 		}
 		return parseTime(val);
 	}
+
+	utils.getNumberParam = function(str){
+		var val = utils.getStringParam(str);
+		if(val === undefined){
+			return undefined;
+		}
+		return parseFloat(val);
+	}
+
+	utils.getClipsParams = function(){
+			return SubsParams.clips;
+	}
+
+	utils.getFootageParam = function(number){
+		var footage = utils.getClipsParams();
+		for(var i=0;i<footage.length;i++){
+			if(footage[i].name.toUpperCase() == '{FOOTAGE-'+number+'}'){
+				return footage[i].substitute;
+			}
+		}
+	}
+
+
 	/*
 	** Initiate the stage composition. Disables all parameter layers
 	** then resets and enables the stage.
@@ -391,8 +414,8 @@
 		//layer.deepClone       = function(str)                            			  { return utils.deepCloneLayer(this, str); }
 		layer.scaleToHD       = function(time)                             			{ return utils.scaleLayerToHD(this, time); }
 		layer.setTimeRemap    = function(time)                             			{ return utils.setTimeRemap(this, time); }
-		layer.setInTime 			= function(time)																	{ return utils.setInTime(this, time); }
-		layer.setOutTime 			= function(time)																	{ return utils.setOutTime(this, time); }
+		layer.setStartTime 			= function(time)																	{ return utils.setStartTime(this, time); }
+		layer.setEndTime 			= function(time)																	{ return utils.setEndTime(this, time); }
 		layer.addToComp       = function(comp)                             			{ return utils.copyLayerToComp(this, comp); }
 		layer.getComp         = function()                                 			{ return utils.getCompFromLayer(this); }
 		layer.isComp          = function()                                 			{ return (this.source instanceof CompItem) }
@@ -718,7 +741,7 @@
 		return layer;
 	}
 
-	utils.setInTime = function(layer, time){
+	utils.setStartTime = function(layer, time){
 		if(layer.isComp()){
 			layer.startTime = time;
 		} else {
@@ -727,7 +750,7 @@
 		return layer;
 	}
 
-	utils.setOutTime = function(layer, time){
+	utils.setEndTime = function(layer, time){
 		if(layer.isComp()){
 			layer.startTime = time - (layer.outPoint - layer.startTime);
 		} else {
