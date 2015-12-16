@@ -41,7 +41,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
         remoteLog("Could not find footage composition "+name);
       }
       if(comp){
-        try {
+      //  try {      
           var fn = new File(SubsParams.clips[i].substitute);
           if(fn.exists) {
 
@@ -79,11 +79,12 @@ $.evalFile(PATH + "/library/prototype.jsx");
             }
           } else {
             remoteLog("Could not import "+SubsParams.clips[i].substitute+" file is missing", "error")
+            throw new Error("Could not import "+SubsParams.clips[i].substitute+" file is missing");
           }
-        } catch(e) {
+        /*} catch(e) {
           remoteLog("Could not import "+SubsParams.clips[i].substitute+ " Error: "+e.message, "error")
           //$.write("Could not replace "+name+" "+e.message)
-        }
+        }*/
       }
     }
   }
