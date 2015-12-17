@@ -99,11 +99,12 @@
 	  return SubsParams.params;
 	}
 
-	utils.getStringParam = function(str){
+	utils.getStringParam = function(str, num){
+		if(num !== undefined) str = str +"-"+num;
 		return SubsParams.params[str];
 	}
-	utils.getBoolParam = function(str){
-		var val = utils.getStringParam(str);
+	utils.getBoolParam = function(str, num){
+		var val = utils.getStringParam(str,num);
 		if(!val) return false;
 		switch (val.toLowerCase()) {
 			case "true":
@@ -113,16 +114,16 @@
 		return false
 	}
 
-	utils.getTimeParam = function(str){
-		var val = utils.getStringParam(str);
+	utils.getTimeParam = function(str,num){
+		var val = utils.getStringParam(str,num);
 		if(!val){
 			return false;
 		}
 		return parseTime(val);
 	}
 
-	utils.getNumberParam = function(str){
-		var val = utils.getStringParam(str);
+	utils.getNumberParam = function(str,num){
+		var val = utils.getStringParam(str,num);
 		if(val === undefined){
 			return undefined;
 		}
