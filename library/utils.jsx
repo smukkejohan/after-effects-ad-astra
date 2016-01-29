@@ -143,6 +143,15 @@
 		}
 	}
 
+	utils.getSpeakParam = function(number){
+		var footage = utils.getClipsParams();
+		for(var i=0;i<footage.length;i++){
+			if(footage[i].name.toUpperCase() == '{SPEAK-'+number+'}'){
+				return footage[i].substitute;
+			}
+		}
+	}
+
 
 	/*
 	** Initiate the stage composition. Disables all parameter layers
