@@ -27,7 +27,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
   $.evalFile(PATH + "/library/paragraph2D.jsx");
   
   // Define Global CONSTANTS
-  // Turn debug fram on when not in production
+  // Turn debug frame on when not in production
   if( PATH.toLowerCase().indexOf("master") == -1 ) {
      //var DEBUG_FRAME = true;
      var DEBUG_FRAME = false;
@@ -81,45 +81,6 @@ $.evalFile(PATH + "/library/prototype.jsx");
       
       SETTINGS = project.SETTINGS;
       project.create();
-      
-			/*if(projectName == "DR2") {
-			  
-			  $.evalFile(PATH + "/DR2/scripts/DR2.jsx");		  
-				project = new DR2();
-				SETTINGS = project.SETTINGS;
-				project.create();
-				
-			} else if (projectName.indexOf("DR3") !== -1) {
-              
-			  $.evalFile(PATH + "/DR3/scripts/DR3.jsx");			  
-				project = new DR3();
-				SETTINGS = project.SETTINGS;
-				project.create();            
-            
-			} else if (projectName == "DR1") {
-		
-			  $.evalFile(PATH + "/DR1/scripts/DR1.jsx");			  
-				project = new DR1();
-				SETTINGS = project.SETTINGS;
-				project.create();
-		
-			} else if (projectName == "DRU") {
-			  
-			  $.evalFile(PATH + "/DRU/scripts/DRU.jsx");			  
-				project = new DRU();
-				SETTINGS = project.SETTINGS;
-				project.create();
-				
-			} else if (projectName == "NOLOOK") {
-			  
-			  $.evalFile(PATH + "/NOLOOK/scripts/NOLOOK.jsx");			  
-				project = new NOLOOK();
-				SETTINGS = project.SETTINGS;
-				project.create();
-				
-			} else {
-			  throw new Error("Project not valid.")
-			}*/
 			
       if(DEBUG_FRAME){
         debug.addDebugComp(mainComp);

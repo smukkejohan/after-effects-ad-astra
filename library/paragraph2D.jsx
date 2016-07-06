@@ -7,7 +7,6 @@
 var _textSizeCache =  {};
 var _textFontName;
 
-
 var Paragraph2D = function(origin, container, options) {
 
 	var font, bounds, direction;
@@ -52,8 +51,6 @@ var Paragraph2D = function(origin, container, options) {
 	this.getName = function() {
 		return origin.name;
 	}
-
-
 
   getTextSize = function(layer, word){
     word = word.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
@@ -155,11 +152,8 @@ var Paragraph2D = function(origin, container, options) {
 			}
 		}
 
-    //origin.remove()
-    this.layers = null
-
-		//
-
+    	//origin.remove()
+    	this.layers = null
 		return null
 	}
 
@@ -174,12 +168,13 @@ var Paragraph2D = function(origin, container, options) {
 
 		if(w > bounds.w || origin.getText().indexOf("//") !== -1) {
 
-			debug.log("\n Trying to split " + origin.name + " width is " + w + " and max width is: " + bounds.w)
-			this.layers = this.splitTextLayer()
+			debug.log("\n Trying to split " + origin.name + " width is " + w + " and max width is: " + bounds.w);
+			this.layers = this.splitTextLayer();
 
-      if(!this.layers){
-        return;
-      }
+      		if(!this.layers){
+        		return;
+      		}
+
 			for(i in this.layers) {
 				var index = i;
 
@@ -199,7 +194,6 @@ var Paragraph2D = function(origin, container, options) {
 				} else {
 					line.setPos([npos.x, npos.y], 0);
 				}
-
 			}
 
 		} else {
@@ -323,7 +317,11 @@ var Paragraph2D = function(origin, container, options) {
 		return this.layers;
 	}
 
-	this.getProjectedHeight = function() {
+	this.getProjectedHeight = function() { // DEPRECATE for 2D text layer
+		return this.layers.length * offset
+	}
+
+	this.getHeight = function() {
 		return this.layers.length * offset
 	}
 
