@@ -55,26 +55,26 @@ $.evalFile(PATH + "/library/prototype.jsx");
               var usageComp = utils.getComp(match[1])
               if (usageComp) {
                 var layers = usageComp.getAllLayers();
-                for (var i = 0; i < layers.length; i++) {
+                for (var il = 0; il < layers.length; il++) {
                   try {
-                    layers[i].scaleToHD();
+                    layers[il].scaleToHD();
                   } catch (e) {
                   }
 
-                  layers[i].setTimeRemap();
+                  layers[il].setTimeRemap();
                 }
               }
 
               var usageComp2 = utils.getComp(match[2])
               if (usageComp2) {
                 var layers = usageComp2.getAllLayers();
-                for (var i = 0; i < layers.length; i++) {
+                for (var il = 0; il < layers.length; il++) {
                   try {
-                    layers[i].scaleToHD();
+                    layers[il].scaleToHD();
                   } catch (e) {
                   }
 
-                  layers[i].setTimeRemap();
+                  layers[il].setTimeRemap();
                 }
               }
             }
