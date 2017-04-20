@@ -186,7 +186,37 @@
 	utils.copyTemplate = function(templateComp, copyToComp) {
 		return utils.enhanceLayer(copyToComp.layers.add(templateComp));
 	};
-
+ 
+	
+	// todo: new method setOut for layers that sets outPoint and increases duration for source first if neccesarry
+	
+    
+    
+    utils.setCompDuration = function(comp, duration, recursive) {
+        
+        comp.duration = duration;
+        
+        if(!recursive) {
+        	recursive = false;
+		}
+        
+        layers = comp.getAllLayers();
+        for(var i=0; i<layers.length; i++){
+    
+            var layer = layers[i];
+            if(layer.isComp()) {
+                if(layer.timeRemapEnabled) {
+                    layer.setTimeRemap(duration);
+                } else {
+                    utils.setCompDuration(layer.getComp(), duration, recursive);
+                }
+            }
+            layer.outPoint = duration;
+        }
+    };
+	
+	
+    // TODO: change method - it is poorly named
 	utils.expandLayerDuration = function(comp, duration) {
 		utils.getComp(comp.name).duration = duration;
 		for(var i = 1; i <= comp.numLayers; i++){
@@ -369,7 +399,8 @@
 	    return false;
 	  }
 	};
-
+	
+	// TODO: rename getLayers
 	utils.getAllLayers = function(comp) {
 	  var layers = [];
 	  for(var i=0; i < comp.numLayers; i++) {
@@ -377,14 +408,15 @@
 	  }
 	  return layers;
 	};
-
+    
+    // TODO: rename getCompLayers
 	utils.getAllCompLayers = function(comp) {
-	  var layers = utils.getAllLayers(comp)
-	  var compLayers = []
+	  var layers = utils.getAllLayers(comp);
+	  var compLayers = [];
 	  for(i in layers) {
 	    if(layers[i].isComp()) {
-	      compLayers.push(layers[i])
-      }
+	      compLayers.push(layers[i]);
+        }
 	  }
 	  return compLayers;
 	};
