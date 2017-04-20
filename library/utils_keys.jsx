@@ -7,16 +7,16 @@
 		if(offset!=0){
 			var layers = comp.getAllLayers();
 			for(var i = 0; i<layers.length; i++){
-				utils.movePropKeys(layers[i], inTime, outTime, offset)
+				utils.movePropKeys(layers[i], inTime, outTime, offset);
 			}
 		}
 		return comp;
-	}
+	};
 	
 	utils.selectPropKeys = function(layer, inTime, outTime) {
-		utils.selectKeys(layer, inTime, outTime)
+		utils.selectKeys(layer, inTime, outTime);
 		return layer;
-	}
+	};
 	
 	utils.movePropKeys = function(layer, inTime, outTime, offset) {
 		
@@ -25,7 +25,7 @@
 			utils.moveSelectedKeys(layer, offset, 1);
 		}
 		return layer;
-	}
+	};
 	
 	utils.removePropKeys = function(layer, inTime, outTime) {
 		utils.selectKeys(layer, inTime, outTime);
@@ -43,7 +43,7 @@
 		}
 		return layer;
 
-	}
+	};
 
 	utils.copyPasteKeys = function(fromLayer, keyStartTime, keyEndTime, toLayer, offset){
 
@@ -86,12 +86,12 @@
 
 				var keyTime = prop.keyTime(_selKeys[j]);
 				var keyToCopy = prop.nearestKeyIndex(keyTime);
-				utils.shiftKeyToNewLayer(prop, newProp, keyToCopy, offset)
+				utils.shiftKeyToNewLayer(prop, newProp, keyToCopy, offset);
 				prop.setSelectedAtKey(keyToCopy, false);
 			}
 
 		}
-	}
+	};
 	
 	
 	
@@ -138,7 +138,7 @@
 				}
 			}
 		}
-	}
+	};
 	
 	// getSelectedKeys()
 	// 
@@ -187,7 +187,7 @@
 		}
 	
 		return props;
-	}
+	};
 	
 	// shiftKeyToNewTime()
 	// 
@@ -265,7 +265,7 @@
 
 		}
 		
-	}
+	};
 
 	utils.shiftKeyToNewLayer = function(prop, newProp, keyToCopy, offset)
 	{
@@ -321,10 +321,8 @@
 		
 			newProp.setRovingAtKey(newKeyIndex, roving);
 		}
-	
 		
-		
-	}
+	};
 
 	utils.updateKeyWithNewValue = function(prop, keyToCopy, newValue)
 	{
@@ -380,7 +378,7 @@
 			prop.setRovingAtKey(newKeyIndex, roving);
 		}
 	
-	}
+	};
 	
 	// selectKeys()
 	// 

@@ -9,36 +9,35 @@ var Paragraph = function(origin, container, padding) {
 	var font, layers, projectedBounds, direction;
 	var words, widths, assumedHeight;
 	
-	var offset = utils.getLineHeight(origin, 0.85)
-	
-	
+	var offset = utils.getLineHeight(origin, 0.85);
+
 	__construct = function() {
 		
-		font = Font.get(origin.property("Source Text").value.font)
+		font = Font.get(origin.property("Source Text").value.font);
 		
-		direction = "up"	
+		direction = "up";
 		if(!padding) padding = [0, 0, 0, 0]
-		layers = [origin]
+		layers = [origin];
 		
 		projectedBounds = new Size(
 		    container.d3.getProjectedSize().w - padding[1] - padding[3], 
 				container.d3.getProjectedSize().h - padding[0] - padding[2]
-		)
+		);
 		
 		var assumedLineNum = origin.d3.getProjectedSize().w / projectedBounds.w;
 		assumedHeight = new Size(0, assumedLineNum * offset).h	
 				
 		origin.disable();
 		getWordWidths();
-	}
+	};
 	
 	this.getAssumedFit = function() {
 		return assumedHeight < projectedBounds.h;
-	}
+	};
 	
 	this.getName = function() {
 		return origin.name;
-	}
+	};
 	
 	getWordWidths = function() {
 		widths = [];
@@ -47,7 +46,7 @@ var Paragraph = function(origin, container, padding) {
 		for(i in words) {
 			 widths.push( origin.d3.getProjectedTextSize(words[i]).w );
 		}	
-	}
+	};
 	
 	this.indentLines = function() { 	
 		// indent all lines with lookup on first letter in the parsed offsetobject for font
@@ -80,14 +79,14 @@ var Paragraph = function(origin, container, padding) {
 				}
 			}
 		}
-	}
+	};
 	
 	this.draw = function() {
 	  this.split();
 		this.indentLines();
 		this.enable();
 		return this;
-	}
+	};
 	
 	this.debug = function() {
 	  /*if(DEBUG) {
@@ -105,50 +104,50 @@ var Paragraph = function(origin, container, padding) {
   		textsizelayer.enable();
   		testlayer.enable();
 	  }*/
-	}
+	};
 	
 	this.fits = function() {
 		if (this.getProjectedWidth() < projectedBounds.w && this.getProjectedHeight() < projectedBounds.h) return true;
 		return false;
-	}
+	};
 	
 	this.getLines = function() {
-		return layers
-	}
+		return layers;
+	};
 	
 	this.getOffset = function() {
 		return offset;
-	}
+	};
 	
 	this.disable = function() {
 		for(i in layers) {
-			layers[i].disable()
+			layers[i].disable();
 		}
-	}
+	};
 	
 	this.purge = function() {
 	  for(i in layers) {
-			layers[i].remove()
+			layers[i].remove();
 		}
-		layers = null
-		return null
-	}
+		layers = null;
+		return null;
+	};
 	
 	this.enable = function() {
 		for(i in layers) {
-			layers[i].enable()
+			layers[i].enable();
 		}
-	}
+	};
 	
 	this.split = function() {	
-		var w = origin.d3.getProjectedSize().w
+		var w = origin.d3.getProjectedSize().w;
 		
 		if(w > projectedBounds.w) {
       
       //debug.log("\n Trying to split " + origin.name + " width is " + w + " and max width is: " + projectedBounds.w)
       
-			layers = splitTextLayer()
-		
+			layers = splitTextLayer();
+
 			for(i in layers) {
 				var index = i;
 				
@@ -174,7 +173,7 @@ var Paragraph = function(origin, container, padding) {
 		
 		this.enable();
 		return this
-	}
+	};
 	
 	splitTextLayer = function() {	
 		//var width = layer.d3.getProjectedSize().w;
@@ -231,11 +230,11 @@ var Paragraph = function(origin, container, padding) {
 		}
 
 		return layers;
-	}
+	};
 	
 	this.getProjectedHeight = function() {			
 		return layers.length * offset
-	}
+	};
 	
 	/*
 	** Returns the viewport dimensions of the longest line
@@ -253,10 +252,10 @@ var Paragraph = function(origin, container, padding) {
 			}
 		}
 		return width
-	}
+	};
 	
 	__construct()
-}
+};
 
 utils.normalizeTextLines = function(layer, lines, projectedMaxWidth) {
 	var widths = [];
@@ -310,15 +309,15 @@ utils.normalizeTextLines = function(layer, lines, projectedMaxWidth) {
 	}
 	
 	return lines;
-}
+};
 
 // formatting functions
 utils.getLineHeight = function(textLayer, lineHeight) {
 	return textLayer.property("Source Text").value.fontSize*lineHeight;
-}
+};
 utils.getFontSize = function(textLayer) {
 	return textLayer.property("Source Text").value.fontSize;
-}
+};
 utils.trimArray = function(array, deleteValue) {
 	for (var i = 0; i < array.length; i++) {
 		if (array[i] == deleteValue) {         
@@ -327,11 +326,11 @@ utils.trimArray = function(array, deleteValue) {
 		}
 	}
 	return array;
-}
+};
 
 utils.stripNewlines = function(str){
 	return str.replace(/\s*\/\/\s*/, ' ');
-}
+};
 
 utils.splitText = function(str) {
 	var splitArray = [];
@@ -358,7 +357,7 @@ utils.splitText = function(str) {
 
 	}
 	return splitArray;	
-}
+};
 
 
 }

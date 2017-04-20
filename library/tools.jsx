@@ -14,7 +14,7 @@
       // footage.name = "{FOOTAGE-"+(30+i)+"}";
       // footage.addToComp(footageComp);
     }
-  }
+  };
 
   // same same but different
   var addFootagePlaceholders = function(num)

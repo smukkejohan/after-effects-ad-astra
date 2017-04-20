@@ -5,7 +5,7 @@
 	
 	// Debug helpers //
 	///////////////////
-	
+
 	// Peek inside an object and print contents
 	// to console log
 	debug.peekIn = function (pObj) {
@@ -24,7 +24,7 @@
 				out +="\n";
 		}
 		this.log(out);
-	}
+	};
 	
 	
 	debug.probeProperties = function (pObj) { probePropertiesAtTime(pObj, 0); }
@@ -32,17 +32,17 @@
 		var out = "Probing properties of \”" + pObj.name.toString() + "\"\n";
 		var hitBounds = false;
 		var i = 1;
-		while (!hitBounds) {
-			try {
-				try {
-					out += "      " + i + ": " + pObj.property(i).name+" = " + pObj.property(i).valueAtTime(timeValue, null) + "\n";
-				} catch (e) {
-					try {
-						out += "      "+ i + ": " + pObj.property(i).name+ pObj.property(i).toString() + "\n";
-					} catch (e) {
-						out += "      " + i + ": " + pObj.property(i).name + "(no direct access)\n";
-					}
-				}
+        while (!hitBounds) {
+            try {
+                try {
+                    out += "      " + i + ": " + pObj.property(i).name+" = " + pObj.property(i).valueAtTime(timeValue, null) + "\n";
+                } catch (e) {
+                    try {
+                        out += "      "+ i + ": " + pObj.property(i).name+ pObj.property(i).toString() + "\n";
+                    } catch (e) {
+                        out += "      " + i + ": " + pObj.property(i).name + "(no direct access)\n";
+                    }
+                }
 				i++;
 			} catch (e) {
 				try {
@@ -54,7 +54,7 @@
 			}
 		}
 		this.log(out);
-	}
+	};
 	
 	// Outputs string to AE JavaScript console
 	debug.log = function (string) {
@@ -83,11 +83,10 @@
       l.setPos([10,this.logY]);
       this.logY += 30;
     }
-	}
+	};
   
   debug.createComp = function(){
 		var comp = app.project.items.addComp("__DEBUG",1920, 1080, 1, 1/25, 25)
-      
 		this.comp = utils.getComp(comp.name);
     
     this.comp.layers.addSolid([0,0,0],"BACKGROUND", 1920, 1080, 1, 1/25);
@@ -108,7 +107,7 @@
     
     l.setPos([10,this.logY]);
     this.logY += 40;
-  }
+  };
   
   debug.logParams = function(params){
     var i=50;
@@ -128,12 +127,14 @@
         i += 40;
       }
     }
-  }
+  };
 
   debug.addDebugComp = function(mainComp){
     this.comp.addToComp(mainComp);    
+  };
+
+  if (DEBUG) {
+      debug.log("\n \n===================================\nDebug helpers are active \n");
   }
 
-	
-	if (DEBUG) debug.log("\n \n===================================\nDebug helpers are active \n");
 }

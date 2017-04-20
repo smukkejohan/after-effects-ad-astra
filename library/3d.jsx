@@ -9,12 +9,10 @@
 // Rename functions to sane shorter names
 
 
-
 // Ideas
 // Rename viewport operations to Projected getProjectPosition setProjectedDimensions ...
 
 // d3 shoudl be named a viewportEnvironment
-
 
 {
   
@@ -109,21 +107,21 @@
 			layer.d3 = new Object();
 			
 			layer.d3.getProjectedSize = function() {
-				return d3.getProjectedSize(layer.pos.getLowerLeft(d3.time), layer.pos.getUpperRight(d3.time))
-			}
+				return d3.getProjectedSize(layer.pos.getLowerLeft(d3.time), layer.pos.getUpperRight(d3.time));
+			};
 			
 			
 			layer.d3.getProjectedTextSize = function(str) {
-			  var tmplayer = layer.clone()
-			  tmplayer.setText(str)
-			  var size = d3.getProjectedSize(tmplayer.pos.getLowerLeft(d3.time), tmplayer.pos.getUpperRight(d3.time))
-			  tmplayer.remove()
+			  var tmplayer = layer.clone();
+			  tmplayer.setText(str);
+			  var size = d3.getProjectedSize(tmplayer.pos.getLowerLeft(d3.time), tmplayer.pos.getUpperRight(d3.time));
+			  tmplayer.remove();
 			  return size;
-			}
+			};
 			
 			layer.d3.test = function() {
 				alert("This Layer has been d3 enhanced!")
-			}
+			};
 			
 			/*
 			** Sets width and height of a layer so it appears at the specified size in the viewport
@@ -131,7 +129,7 @@
 			layer.d3.setProjectedSize = function(dimensions) {
 				var world = d3.setProjectedSize(layer, dimensions);
 				return layer;
-			}
+			};
 			
 			/*
 			** Gets the position relative to the viewport, returns a 2d vector
@@ -155,7 +153,7 @@
 				}*/
 				
 				return d3.point.worldToViewport(point);
-			}
+			};
 			
 			/*
 			** Sets position from viewport coordinates, takes a 2d vector returns the layer
@@ -213,21 +211,18 @@
 	** Converts vec2 ae coordinates to vec2 viewport coordinates
 	*/
 	d3.point.aeToViewport = function(point) {
-	  
-	  
-	  
 		return new Vec2(point.x+d3.viewport.dimensions.w/2, point.y+d3.viewport.dimensions.h/2);
-	}
+	};
 	
 	
 	d3.point.viewportToAe = function(point) {
 		return new Vec2(point.x-d3.viewport.dimensions.w/2, point.y-d3.viewport.dimensions.h/2);
-	}
+	};
 	
 	/* NOT YET TESTEd!!! */
 	d3.point.viewportToWorld = function(vector, z) {
 		return d3.viewportCoordsTo3dCoordsAtZ(vector, z);
-	}
+	};
 		
 	/*
 	** Converts vec3 world coordinates to vec2 ae coordinates
@@ -254,7 +249,7 @@
 		var ray = point.subtract(d3.viewport.origin);
 		var intersection = Plane.IntersectRayWithPlane(d3.viewport.origin, ray, projectionPlane)
 		return new Vec2(intersection.x, intersection.y);
-	}
+	};
 
 	// get - should be getProjectedSize
 	d3.getProjectedSize = function(lowerLeft, upperRight) {
@@ -265,7 +260,7 @@
 		
 		//alert("x:" + dimensionVector.x +" y:" + dimensionVector.y);
 		return new Size(Math.abs(dimensionVector.x), Math.abs(dimensionVector.y));
-	}
+	};
 	
 	/* 
 	** Get world dimensions from projected viewport dimensions
@@ -293,7 +288,7 @@
   		}
 
 		return layer;
-	}
+	};
 	
 	
 	// layer is not modified and does not need to relate tto the values, just be on the same plane in 3d space
@@ -303,13 +298,12 @@
 		var distance = d3.viewportDistanceToPlane(anchorPlane);
 		
 		if (d3.viewport.projectionPlaneDistance == 0) {
-		  throw "Division by 0"
+		  throw "Division by 0";
 	  }
 		var scaleFactor = distance / d3.viewport.projectionPlaneDistance;		
-		var projectedSize = new Dimensions(size.w*scaleFactor, size.h*scaleFactor);
-		
-		return projectedSize;
-	}
+
+		return new Dimensions(size.w*scaleFactor, size.h*scaleFactor);
+	};
 	
 	// gridCoordsToAe(gridCoords)
 	//
@@ -329,14 +323,14 @@
 		var pixelCoords = new Vec2(gridCoords.x*(this.viewport.dimensions.w/SETTINGS.GRIDSLICES_X)-(this.viewport.dimensions.w/2),
 								   gridCoords.y*(this.viewport.dimensions.h/SETTINGS.GRIDSLICES_Y)-(this.viewport.dimensions.h/2));
 		return pixelCoords;
-	}	
+	};
 	
 	
 	/*UPDATED as point.viewporttoae */
   d3.viewportCoordsToPixelCoords = function(viewportCoords) {
           var pixelCoords = new Vec2(viewportCoords.x - this.viewport.dimensions.w/2, viewportCoords.y - this.viewport.dimensions.h/2);
           return pixelCoords;
-  }
+  };
 	
 	// gridDimensionsToPixelDimensions(gridCoords)
 	//
@@ -356,7 +350,7 @@
 		var pixelDimensions = new Dimensions(gridCoords.w*(this.viewport.dimensions.w/SETTINGS.GRIDSLICES_X),
 								   		 gridCoords.h*(this.viewport.dimensions.h/SETTINGS.GRIDSLICES_Y));
 		return pixelDimensions;
-	}
+	};
 	
 	// layerLocalProjectionPlane(layer)
 	//
@@ -379,7 +373,7 @@
 		var normal = this.viewport.pointOfInterest.multiply(-1);
 		var plane = new Plane(anchorPoint, normal);
 		return plane;
-	}
+	};
 	
 	// viewportDistanceToPlane(plane)
 	//
@@ -397,7 +391,7 @@
 	d3.viewportDistanceToPlane = function(plane) {
 		var distance = Plane.DistanceToPoint(plane, this.viewport.origin);
 		return distance;
-	}
+	};
 	
 	// gridCoordsTo3dCoordsAtZ(gridCoords, z)
 	//
@@ -425,12 +419,12 @@
 	
 	d3.gridCoordsTo3dCoordsAtZ = function(gridCoords, z) {
 		return this.pixelCoordsTo3dCoordsAtZ(this.gridCoordsToAe(gridCoords), z);
-	}
+	};
 	
 	
 	d3.viewportCoordsTo3dCoordsAtZ = function(viewportCoords, z) {
 		return this.pixelCoordsTo3dCoordsAtZ(this.viewportCoordsToPixelCoords(viewportCoords), z);
-	}
+	};
 		
 	d3.pixelCoordsTo3dCoordsAtZ = function(pixelCoords, z) {
 		// Get the unit-vector for what we are looking at. We
@@ -463,7 +457,7 @@
 		var ray = worldCoords.subtract(this.viewport.origin);
 		worldCoords = Plane.IntersectRayWithPlane(viewport.origin, ray, plane);	
 		return worldCoords;
-	}
+	};
 }
 
 
@@ -482,7 +476,7 @@ d3.testProjectedDimensions = function() {
 	var dimensions = d3.getDimensionsInViewport(lowerLeft, upperRight);
 	debug.log("Dimensions:");
 	debug.peekIn(dimensions);
-}
+};
 
 // TODO: INTEGRATE the functions below in d3 and change them to use viewport dimensions
 
@@ -507,7 +501,7 @@ var moveLayerToGridPosition = function(layer, gridPosition) {
 	layer.transform.position.setValueAtTime(0, [newPosition.x,
 									   newPosition.y,
 									   newPosition.z]);
-}
+};
 
 
 // setLayerGridSize(layer, gridDimensions)
@@ -566,7 +560,7 @@ var setLayerGridSize = function(layer, size) {
 		layer.text[i].transform.scale.setValueAtTime(this.calculateTextTransform(transform));
 	}*/
 	
-}
+};
 
 
 // calculateTextTransform(transform)
