@@ -254,7 +254,7 @@ var Paragraph = function(origin, container, padding) {
 		return width
 	};
 	
-	__construct()
+	__construct();
 };
 
 utils.normalizeTextLines = function(layer, lines, projectedMaxWidth) {

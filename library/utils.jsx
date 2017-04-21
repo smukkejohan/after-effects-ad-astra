@@ -110,7 +110,7 @@
 			case "1":
 				return true;
 		}
-		return false
+		return false;
 	};
 
 	utils.getTimeParam = function(str,num){
