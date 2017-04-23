@@ -2,15 +2,39 @@
  
     var DR_TV = new Object();
     
-    DR_TV.addLogoVender = function () {
-            if(_.getBoolParam("HASDRTVLOGO", 1)) {
+    DR_TV.addLogoVender = function (_logoComp, _placeLogoLayerName, _i) {
+    
+            var logoComp;
+            var i;
+            if(!_i) {
+                i = 1;
+            } else {
+                i = _i;
+            }
+            
+            
+            if(!_logoComp) {
+                logoComp  = _.getComp("LOGOCOMP_MAIN");
+            } else {
+                logoComp = _logoComp;
+            }
+    
+    
+        var startLogoLayer;
+    
+        if(!_placeLogoLayerName) {
+            startLogoLayer = logoComp.getLayer(_.getStringParam("CHANNEL",i) + "_in_place_out");
+        } else {
+            startLogoLayer = logoComp.getLayer(_placeLogoLayerName);
+        }
+        
+            if(_.getBoolParam("HASDRTVLOGO", i)) {
                 
-                var tI   = _.getTimeParam("DRTVLOGO-TIME-IN", 1);
-                var tO   = _.getTimeParam("DRTVLOGO-TIME-OUT", 1);
+                var tI   = _.getTimeParam("DRTVLOGO-TIME-IN", i);
+                var tO   = _.getTimeParam("DRTVLOGO-TIME-OUT", i);
                 var tD   = tO - tI;
-                var lTxt = _.getStringParam("DRTVLABEL", 1);
+                var lTxt = _.getStringParam("DRTVLABEL", i);
                 
-                var logoComp  = _.getComp("LOGOCOMP_MAIN");
                 var drTvLayer = logoComp.getLayer("DRTV_vender_in_place_out");
                 var drTvComp  = drTvLayer.getComp();
                 
@@ -39,7 +63,6 @@
                     _.movePropKeys(labelLayer, 9, 10, -(10 - (tD - outAnimDur)));
                 }
                 
-                var startLogoLayer = logoComp.getLayer(_.getStringParam("CHANNEL",1) + "_in_place_out");
                 var endLogoLayer   = startLogoLayer.clone();
                 
                 startLogoLayer.outPoint = tI;
