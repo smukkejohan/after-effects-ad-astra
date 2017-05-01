@@ -62,11 +62,21 @@
                     labelLayer.enable();
                     _.movePropKeys(labelLayer, 9, 10, -(10 - (tD - outAnimDur)));
                 }
-                
+    
                 var endLogoLayer   = startLogoLayer.clone();
                 
-                startLogoLayer.outPoint = tI;
-                endLogoLayer.startTime  = tO;
+                if(startLogoLayer.isComp()) {
+    
+                    startLogoLayer.outPoint = tI;
+                    endLogoLayer.startTime  = tO;
+                    
+                } else {
+    
+                    startLogoLayer.outPoint = tI;
+                    endLogoLayer.inPoint  = tO;
+                }
+                
+
             }
         };
 }
