@@ -60,7 +60,7 @@
                     labelLayer.setText(lTxt);
                     labelLayer.outPoint = tD - outAnimDur;
                     labelLayer.enable();
-                    _.movePropKeys(labelLayer, 9, 10, -(10 - (tD - outAnimDur)));
+                    _.movePropKeys(labelLayer, 9, 10, -(10 - (tD )));
                 }
     
                 var endLogoLayer   = startLogoLayer.clone();
