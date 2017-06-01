@@ -52,7 +52,7 @@
                 
                 //TODO: freeze frame at method ... simplify these 2 lines
                 stillLayer.setTimeRemap(tD - outAnimDur);
-                _.movePropKeys(stillLayer, 0, tO, tO*2);
+                _.movePropKeys(stillLayer, 0, tD, tD);
                 
                 slutLayer.startTime = tD - outAnimDur;
                 
@@ -71,9 +71,8 @@
                     endLogoLayer.startTime  = tO;
                     
                 } else {
-    
-                    startLogoLayer.outPoint = tI;
                     endLogoLayer.inPoint  = tO;
+                    startLogoLayer.outPoint = tI;
                 }
                 
 
