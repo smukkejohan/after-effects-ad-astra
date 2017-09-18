@@ -16,7 +16,7 @@ var Paragraph = function(origin, container, padding) {
 		font = Font.get(origin.property("Source Text").value.font);
 		
 		direction = "up";
-		if(!padding) padding = [0, 0, 0, 0]
+		if(!padding) padding = [0, 0, 0, 0];
 		layers = [origin];
 		
 		projectedBounds = new Size(
