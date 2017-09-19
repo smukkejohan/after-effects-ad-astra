@@ -11,10 +11,10 @@
             level = 'info';
         }
         // TODO: check the log level exist ?
-
-        if(this.DEBUG) { // TODO: this flag should actually be producton / development
+        // TODO: this flag (this.DEBUG) should actually be producton / development
+        if(DEBUG) {
             // if we are debugging write log to extendscript console
-            $.writeln("log " + "[" + level + "]" + ":" + msg + $.line);
+            $.writeln("log " + "[" + level + "]" + ":" + msg );
             
         } else {
             
@@ -23,7 +23,6 @@
             // everything above debug (ubless debug log level set) to local log file and to progressbar
         }
     };
-    
     logger.debug   = function(msg) { logger.log(msg, "debug");   };
     logger.info    = function(msg) { logger.log(msg, "info");    };
     logger.notice  = function(msg) { logger.log(msg, "notice");  };
@@ -32,7 +31,6 @@
     logger.crit    = function(msg) { logger.log(msg, "crit");    };
     logger.alert   = function(msg) { logger.log(msg, "alert");   };
     logger.emerg   = function(msg) { logger.log(msg, "emerg");   };
-    
 }
 
       // DEPRECATED
