@@ -33,15 +33,3 @@
     logger.emerg   = function(msg) { logger.log(msg, "emerg");   };
 }
 
-      // DEPRECATED
-      /*if(!level) level = 2
-       if(this.LOG_LEVEL > level) {
-          if(this.DEBUG) {
-            $.writeln("log:" + msg + $.line);
-          } else {
-            reportError(msg);
-    	  }
-        }
-       }*/
-    
-

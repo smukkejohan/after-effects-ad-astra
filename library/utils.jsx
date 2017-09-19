@@ -177,6 +177,7 @@
 	/*
 	** Set duration of the main composition.
 	*/
+	// DEPRECATE - too specific for framework
 	utils.setDuration = function(time) {
 		mainComp.duration = time;
 		//mainComp.workAreaStart = 0;
@@ -192,13 +193,9 @@
  
 	
 	// todo: new method setOut for layers that sets outPoint and increases duration for source first if neccesarry
-	
-    
-    
     utils.setCompDuration = function(comp, duration, recursive) {
         
         comp.duration = duration;
-        
         if(!recursive) {
         	recursive = false;
 		}
@@ -219,7 +216,7 @@
     };
 	
 	
-    // TODO: change method - it is poorly named
+    // TODO: change method named - it is poorly named
 	utils.expandLayerDuration = function(comp, duration) {
 		utils.getComp(comp.name).duration = duration;
 		for(var i = 1; i <= comp.numLayers; i++){
@@ -250,9 +247,9 @@
 				  // extend the returned comp with new awesome functions
 					item.clone = function(compName)                  	  			{ return utils.cloneComp(item, compName);        }
 					item.getLayer = function(layerName)                   			{ return utils.getLayer(item, layerName);        }
-					item.layerExists = function(layerName)                   			{ return utils.layerExists(item, layerName);        }
+					item.layerExists = function(layerName)                   		{ return utils.layerExists(item, layerName);     }
 					item.searchLayer = function(str)                      			{ return utils.searchForLayer(item, str);        }
-					item.searchLayers = function(str)                      			{ return utils.searchForLayers(item, str);        }
+					item.searchLayers = function(str)                      			{ return utils.searchForLayers(item, str);       }
 					item.clear = function()                               			{ return utils.clearComp(item);                  }
 					item.mute = function()                                			{ return utils.muteCompAndAllNestedLayers(item); }
 					item.disableAll = function()                          			{ return utils.disableAllLayers(item);           }
@@ -284,11 +281,9 @@
 
 	utils.cloneComp = function(comp, str) {
 		var cloneComp = utils.getComp(comp.duplicate());
-
 		if(str !== undefined){
 			cloneComp.name = str;
 		}
-
 		return cloneComp;
 	};
 
@@ -343,23 +338,15 @@
 	};
 
 	utils.getLayer = function(comp, layerName) {
-	  if(typeof layerName != "string" && typeof layerName != "number") {
+	    if(typeof layerName != "string" && typeof layerName != "number") {
 		  throw new TypeError("LayerName is not a valid string or integer.")
 		}
-	  //try {
-		  var layer = comp.layer(layerName);
-		  if (!isValid(layer)) {
- 			  
-              	    return null;
-
-                // throw new Error("Layer " + layerName + " is not valid or was not found. Check that it exists in the composition.");
-                // extendscript bug: https://forums.creativecow.net/thread/227/12968
-                // step over me or disable debugger, then I work
-          
-          }
-		  return utils.enhanceLayer(layer);
-	  //} catch (e) {
-	  //}
+		var layer = comp.layer(layerName);
+		if (!isValid(layer)) {
+            return null;
+            // throw new Error("Layer " + layerName + " is not valid or was not found. Check that it exists in the composition.");
+        }
+		return utils.enhanceLayer(layer);
 	};
 
 	utils.searchForLayer = function(comp, str) {
@@ -464,9 +451,9 @@
 	utils.enhanceLayer = function(layer) {
 
 		layer.setText         = function(str)                              			{ return utils.setLayerText(this, str); };
-		layer.getText         = function()		                           			  { return utils.getLayerText(this); };
-		layer.getFontSize     = function()		                           			  { return utils.getFontSize(this); };
-		layer.setTextColor	  = function(color)							   									{ return utils.setLayerTextColor(this, color); };
+		layer.getText         = function()		                           			{ return utils.getLayerText(this); };
+		layer.getFontSize     = function()		                           			{ return utils.getFontSize(this); };
+		layer.setTextColor	  = function(color)							   			{ return utils.setLayerTextColor(this, color); };
 		layer.enable          = function()                                 			{ return utils.enableLayer(this); };
 		layer.disable         = function()                                 			{ return utils.disableLayer(this); };
 		layer.getScale        = function(time)                             			{ return utils.getLayerScale(this, time); };
@@ -477,11 +464,11 @@
 		layer.getTextSize     = function(str, time)                        			{ return utils.getTextLayerSize(this, str, time); };
 		layer.clone           = function(str)                              			{ return utils.cloneLayer(this, str); };
 		layer.cloneComp       = function(str)                              			{ return utils.cloneLayersComp(this, str); };
-		//layer.deepClone       = function(str)                            			  { return utils.deepCloneLayer(this, str); };
+		//layer.deepClone       = function(str)                            			{ return utils.deepCloneLayer(this, str); };
 		layer.scaleToHD       = function(time)                             			{ return utils.scaleLayerToHD(this, time); };
 		layer.setTimeRemap    = function(time)                             			{ return utils.setTimeRemap(this, time); };
-		layer.setStartTime 			= function(time)																	{ return utils.setStartTime(this, time); };
-		layer.setEndTime 			= function(time)																	{ return utils.setEndTime(this, time); };
+		layer.setStartTime 	  = function(time)									    { return utils.setStartTime(this, time); };
+		layer.setEndTime 	  = function(time)									    { return utils.setEndTime(this, time); };
 		layer.addToComp       = function(comp)                             			{ return utils.copyLayerToComp(this, comp); };
 		layer.getComp         = function()                                 			{ return utils.getCompFromLayer(this); };
 		layer.isComp          = function()                                 			{ return (this.source instanceof CompItem) };
@@ -505,7 +492,7 @@
 		layer.offsetKey       = function(prop, index, offset, preExpression) 		{ return utils.offsetKeyframeForProp(layer, prop, index, offset, preExpression); };
 		layer.easeKey         = function(prop, value1, value2, index)      			{ return utils.setEaseAtKeyIndex(this, prop, value1, value2, index); };
 		layer.selectKeys      = function(inTime, outTime)                  			{ return utils.selectPropKeys(this, inTime, outTime); };
-		layer.moveAllKeys	  	= function(inTime, outTime, offset)								{ return utils.movePropKeys(this, inTime, outTime, offset); };
+		layer.moveAllKeys	  = function(inTime, outTime, offset)					{ return utils.movePropKeys(this, inTime, outTime, offset); };
 		layer.moveKeys        = function(propStr, inTime, outTime, offset) 			{ return utils.movePropKeys(this, propStr, inTime, outTime, offset); };
 		layer.mute            = function()                                 			{ return utils.mute(this); };
 		layer.unMute          = function()                                 			{ return utils.unMute(this); };
@@ -543,7 +530,6 @@
 
 			getLowerLeft:  function(time) {return utils.getLayerCorners(layer, time)[0]; },
 			getUpperRight: function(time) {return utils.getLayerCorners(layer, time)[1]; },
-
 		};
 
 		if(d3) d3.enhanceLayer(layer);
