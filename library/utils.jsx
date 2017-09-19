@@ -452,7 +452,8 @@
 
 		layer.setText         = function(str)                              			{ return utils.setLayerText(this, str); };
 		layer.getText         = function()		                           			{ return utils.getLayerText(this); };
-		layer.getFontSize     = function()		                           			{ return utils.getFontSize(this); };
+        layer.getFontSize     = function()		                           			{ return utils.getFontSize(this); };
+        layer.setFont   	  = function(font)							   			{ return utils.setLayerFont(this, font); };
 		layer.setTextColor	  = function(color)							   			{ return utils.setLayerTextColor(this, color); };
 		layer.enable          = function()                                 			{ return utils.enableLayer(this); };
 		layer.disable         = function()                                 			{ return utils.disableLayer(this); };
@@ -639,16 +640,26 @@
 		return layer;
 	};
 
-	utils.setLayerTextColor = function(layer, color){
-		try{
+    //utils.setTextProperty = function()
+
+    utils.setLayerTextProperty = function(layer, property, value){
+        try{
 			var textProp = layer.property("Source Text");
 			var textDocument = textProp.value;
-			textDocument.fillColor = color;
+			textDocument[property] = value;
 			textProp.setValue(textDocument);
 		} catch(e){
-			logger.warning("Could not set color of layer "+e);
+			logger.warning("Could not set font of layer "+e);
 		}
 		return layer;
+    };
+
+    utils.setLayerFont = function(layer, font){
+        return utils.setLayerTextProperty(layer, "font", font);
+    };
+
+	utils.setLayerTextColor = function(layer, color){
+        return sutils.etLayerTextProperty(layer, "fillColor", color);
 	};
 
 	/* POSITION FUNCTIONS wOut vectors */
