@@ -27,7 +27,7 @@
     return false;
   };
 
-	// randomInt()
+    // randomInt()
 	//
 	// Description:
 	//   Gets a random integer between two values.
@@ -41,13 +41,16 @@
 	//
 	function rI(min, max) { return randomInt(min, max); }
 	function randomInt(min, max) {
+		logger.warning("All random methods in jsx will be deprecated. Randomization should be moved to frontend.");		
 		return Math.floor(Math.random()*((max+1)-min)+min); // TODO: use new method generateRandomNumber() Math.random() has errors when CPU threading
 	};
 
-
 	// convert time string to seconds
 	function parseTime(str){
-		return Number(currentFormatToTime(str, 25, false));
+		// http://docs.aenhancers.com/globals/#currentformattotime
+		// make sure current timecode format in project settings is not set to frames
+		var n = Number(currentFormatToTime(str, 25, false));		
+		return n;
 	};
 
 
@@ -99,7 +102,7 @@
 	};
 
 	utils.getStringParam = function(str, num){
-		if(num !== undefined) str = str +"-"+num;
+		if(num !== undefined) str = str +"-"+num;		
 		return SubsParams.params[str];
 	}
 	utils.getBoolParam = function(str, num){
@@ -336,7 +339,6 @@
 		for(var i=0; i<layers.length; i++){
 			layers[i].mute();
 			if(layers[i].isComp()) utils.muteCompAndAllNestedLayers(layers[i].getComp());
-			debug.log(i + ": "+ layers[i].name);
 		}
 	};
 
@@ -634,9 +636,6 @@
 
 	utils.setLayerPos = function(layer, vec, time) {
 		if(!time)	time = 0;
-		/*debug.log("setlayerpos:");
-		debug.peekIn(vec);*/
-
 		layer.Transform.Position.setValueAtTime(time, [vec.x,vec.y,vec.z]);
 		return layer;
 	};
@@ -661,7 +660,7 @@
 			textDocument.fillColor = color;
 			textProp.setValue(textDocument);
 		} catch(e){
-			debug.log("Could not set color of layer "+e);
+			logger.warning("Could not set color of layer "+e);
 		}
 		return layer;
 	};
@@ -1074,20 +1073,20 @@
 		//debug.log("SUM: "+angleSum+"\n");
 		mask.debugPairs();
 		if(angleSum > 0){
-			debug.log("CONCLUSION: PATH IS CW");
+			logger.debug("CONCLUSION: PATH IS CW");
 
 			if(str == "CCW") {
 				mask.setVertices(maskPath.reverse());
-				debug.log(" - should be CCW; reverse the current path")
+				logger.debug(" - should be CCW; reverse the current path");
 				mask.debugPairs();
 			}
 
 		} else {
-			debug.log("CONCLUSION: PATH IS CCW");
+			logger.debug("CONCLUSION: PATH IS CCW");
 
 			if(str == "CW") {
 				mask.setVertices(maskPath.reverse());
-				debug.log(" - should be CW; reverse the current path")
+				logger.debug(" - should be CW; reverse the current path");
 				mask.debugPairs();
 			}
 		}
@@ -1210,24 +1209,24 @@
 
 	utils.roundMaskVerticesPairs = function(mask) {
 		var verts = mask.getVertices();
-		debug.log("Rounded vertices for mask: "+mask.name)
+		logger.debug("Rounded vertices for mask: "+mask.name)
 		for(i in verts) {
 			var v = verts[i];
-			debug.log(i+": "+Math.round(v[0])+", "+Math.round(v[1]));
+			logger.debug(i+": "+Math.round(v[0])+", "+Math.round(v[1]));
 		}
-		debug.log("\n")
+		logger.debug("\n")
 	};
 
 	utils.fadeSoundOverTime = function(layer, volumeIn, volumeOut, inTime, outTime)
 	{
-		debug.log("FADE SOUND\n"+layer.name+"\nVol: "+volumeIn+" -> "+volumeOut+"\nTime: "+inTime+" -> "+outTime);
+		logger.debug("FADE SOUND\n"+layer.name+"\nVol: "+volumeIn+" -> "+volumeOut+"\nTime: "+inTime+" -> "+outTime);
 
 		try{
 			layer.property("Audio Levels").setValueAtTime(inTime, [volumeIn, volumeIn]);
 			layer.property("Audio Levels").setValueAtTime(outTime, [volumeOut, volumeOut]);
 
 		} catch (exception){
-			debug.log('DR ERROR | fadeSoundOverTime | Could not fade audio for: '+layer.name+' - exception ' + exception.toString());
+			logger.debug('DR ERROR | fadeSoundOverTime | Could not fade audio for: '+layer.name+' - exception ' + exception.toString());
 		}
 
 		return layer;
@@ -1254,7 +1253,10 @@
 	/*
 	** Weighted random
 	*/
+
+	// 
 	function wRand(data) {
+		logger.warning("All random methods in jsx will be deprecated. Randomization should be moved to frontend.");
 	    var _rand, _lcd;
 	    var _weights = [];
 	    var _select = [];
@@ -1277,15 +1279,13 @@
 	    return _select[_rand];
 	};
 
-
-
-
-
 	/*
 	** Get a random position outside the viewport in 0, 90, 180 or 270 degrees from a vector point
 	*/
 
 	utils.randomPos = function(vector, layer) {
+		logger.warning("All random methods in jsx will be deprecated. Randomization should be moved to frontend.");
+		
 		var compW  = layer.containingComp.width;
 		var compH  = layer.containingComp.height;
 		var offset = 20;
