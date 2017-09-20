@@ -27,6 +27,7 @@ $.evalFile(PATH + "/library/prototype.jsx");
   $.evalFile(PATH + "/library/paragraph2D.jsx");
   
   $.evalFile(PATH + "/library/dr_tv.jsx");
+  $.evalFile(PATH + "/library/dr.jsx");
   
     // Define Global variables
 	var mainComp, projectName, project, path, projectVersion;
