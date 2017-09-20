@@ -80,24 +80,9 @@
 	  return constructor;
 	};
 
-	/*
-	** Load all parameters set by miranda in he mainComp into an object
-	** TODO : handle footage here also and put it in the params object
-	*/
+    /*DEPRECATE*/
 	utils.loadParams = function() {
-	 /* var layers = mainComp.getAllLayers();
-	  var params = {};
-
-	  for(i=0; i < layers.length; i++ ) {
-	    var layer = layers[i]
-	    if(layer.name.substring(0,1) == "{") {
-	      var name = layer.name.substring(1,layer.name.length-1)
-	      if(layer.text) {
-	        params[name] = layer.getText()
-	      }
-	    }
-	  }*/
-//    debug.logParams(params);
+      logger.warning("utils.loadParams function will be DEPRECATED");
 	  return SubsParams.params;
 	};
 
@@ -160,6 +145,8 @@
 	** then resets and enables the stage.
 	*/
 	utils.stage = function() {
+        logger.warning("utils.stage function will be DEPRECATED, setup your stage/main composition explicitly in your project");
+        
 		mainComp.disableAll();
 		var stage = this.getComp("stage");
 		stage.clear();
@@ -179,15 +166,16 @@
 	*/
 	// DEPRECATE - too specific for framework
 	utils.setDuration = function(time) {
+        logger.warning("utils.setDuration function will be DEPRECATED");
 		mainComp.duration = time;
-		//mainComp.workAreaStart = 0;
-		//mainComp.workAreaDuration = time;
 	};
 
 	/*
-	** Copy a template composition into a composition.
+    ** Copy a template composition into a composition.
+    * DEPRECATE use clone and addToComp instead
 	*/
 	utils.copyTemplate = function(templateComp, copyToComp) {
+        logger.warning("utils.copyTemplate function will be DEPRECATED");
 		return utils.enhanceLayer(copyToComp.layers.add(templateComp));
 	};
  
@@ -410,7 +398,9 @@
 	  return compLayers;
 	};
 
+    // DEPRECATED
 	utils.getRandomLayer = function(comp) {
+        logger.warning("All randomization methods in the airlook framework will be deprecated, randomization should be moved to the frontend.");
 		return comp.getLayer(rI(1,comp.numLayers));
 	};
 
