@@ -172,11 +172,18 @@
 
 	/*
     ** Copy a template composition into a composition.
-    * DEPRECATE use clone and addToComp instead
+    * DEPRECATE use addToComp instead
 	*/
 	utils.copyTemplate = function(templateComp, copyToComp) {
         logger.warning("utils.copyTemplate function will be DEPRECATED");
 		return utils.enhanceLayer(copyToComp.layers.add(templateComp));
+    };
+    
+    /*
+    ** Add item to a composition and enhance the layer
+    */
+    utils.addToComp = function(src, targetComp) {
+		return utils.enhanceLayer(targetComp.layers.add(src));
 	};
  
 	
@@ -244,7 +251,7 @@
 					item.enableAll = function()                           			{ return utils.enableAllLayers(item);            }
 					item.getCamera = function()                           			{ return utils.getCamera(item);                  }
 					item.setupCamera = function()                         			{ return utils.setupCamera(item);                }
-					item.addToComp = function(comp)                       			{ return utils.copyTemplate(item, comp);         }
+					item.addToComp = function(comp)                       			{ return utils.addToComp(item, comp);         }
 					item.getRandomLayer = function()                      			{ return utils.getRandomLayer(item);             }
 					item.getAllCompLayers = function()                    			{ return utils.getAllCompLayers(item);           }
 					item.getAllLayers = function()                        			{ return utils.getAllLayers(item);               }
@@ -286,7 +293,7 @@
 				item.getLayer = function(layerName) {
 					return utils.getLayer(this, layerName);
 				}
-				item.addToComp = function(comp)     { return utils.copyTemplate(this, comp);  }
+				item.addToComp = function(comp)     { return utils.addToComp(this, comp);  }
 				return item;
 			}
 		}
