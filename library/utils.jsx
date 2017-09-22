@@ -413,7 +413,7 @@
 	utils.getAllCompLayers = function(comp) {
 	  var layers = utils.getAllLayers(comp);
 	  var compLayers = [];
-	  for(i in layers) {
+	  for(var i = 0; i < layers.length; i++) {
 	    if(layers[i].isComp()) {
 	      compLayers.push(layers[i]);
         }
@@ -649,9 +649,13 @@
 	};
 
 	utils.setLayerText = function(layer, str) {
-		if(str == undefined) str = "";
-		layer.text.sourceText.setValue(str);
-		return layer;
+		if(typeof layer !== "function"){
+			if(str == undefined || typeof str !== "string") str = "";
+			layer.text.sourceText.setValue(str);
+			return layer;
+		}
+//		alert(layer);
+//		alert(str);
 	};
 
 	utils.setLayerTextColor = function(layer, color){
@@ -715,7 +719,7 @@
 
 	utils.findClosestPoint = function(p, vertices) {
 		var distArray = [];
-		for(i in vertices){
+		for(var i = 0; i < vertices.length; i++) {
 			distArray.push([_.lineDistance(vertices[i], p), i, vertices[i]])
 
 		}
@@ -865,7 +869,7 @@
 		var easeIn = [];
 		var easeOut = [];
 
-		for(i in value1) {
+		for(var i = 0; i < value1.length; i++) {
 			var easeInObj = new KeyframeEase(value1[i][0], value1[i][1]);
 			easeIn.push(easeInObj);
 			var easeOutObj = new KeyframeEase(value2[i][0], value2[i][1]);
@@ -968,7 +972,7 @@
 				removeLayers.push(l);
 			}
 		}
-		for(i in removeLayers) {
+		for(var i = 0; i < removeLayers.length; i++) {
 			removeLayers[i].remove();
 		}
 	};
@@ -1141,7 +1145,7 @@
 		var verts    = mask.getVertices();
 		var ySum = 0;
 		var xSum = 0;
-		for(i in verts){
+		for(var i = 0; i < verts.length; i++){
 			xSum += verts[i][0]
 			ySum += verts[i][1]
 		}
@@ -1185,7 +1189,7 @@
 		var offsetX = mask.getMinX() - pos[0] - mask.anchor[0];
 		var offsetY = mask.getMinY() - pos[1] - mask.anchor[1];
 		var newVerts = [];
-		for(i in verts){
+		for(var i = 0; i < verts.length; i++){
 			var v = verts[i];
 			newVerts.push([[v[0]-offsetX],[v[1]-offsetY]])
 		}
@@ -1201,7 +1205,7 @@
 	utils.offsetMaskPosition = function(mask, offset) {
 		var verts = mask.getVertices();
 		var newVerts = [];
-		for(i in verts){
+		for(var i = 0; i < verts.length; i++){
 			var v = verts[i];
 			newVerts.push([[v[0]+offset[0]],[v[1]+offset[1]]])
 		}
@@ -1211,7 +1215,7 @@
 	utils.roundMaskVerticesPairs = function(mask) {
 		var verts = mask.getVertices();
 		debug.log("Rounded vertices for mask: "+mask.name)
-		for(i in verts) {
+		for(var i = 0; i < verts.length; i++){
 			var v = verts[i];
 			debug.log(i+": "+Math.round(v[0])+", "+Math.round(v[1]));
 		}

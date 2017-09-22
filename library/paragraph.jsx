@@ -43,8 +43,8 @@ var Paragraph = function(origin, container, padding) {
 		widths = [];
 		words = utils.splitText(origin.getText());
 		
-		for(i in words) {
-			 widths.push( origin.d3.getProjectedTextSize(words[i]).w );
+		for(var i = 0; i < words.length; i++) {
+			widths.push( origin.d3.getProjectedTextSize(words[i]).w );
 		}	
 	};
 	
@@ -61,20 +61,24 @@ var Paragraph = function(origin, container, padding) {
 			is3D = true;
 		}
 		
-		for(i in layers) {
-			var line 				= layers[i];
-			var firstLetter = line.getText().substring(0,1);
-			
-			for(j in font.offsets) {
-				if(font.offsets[j][0] == firstLetter){
-					var offset = font.offsets[j][1]*offsetScale;
-					//debug.log(origin.name+": "+offset+" | offsetScale: "+offsetScale)
-					if(!is3D) {
-						line.pos.setX(x+offset);
-					} else {
-						var viewPos = new Vec2(line.d3.getViewPos().x+offset, line.d3.getViewPos().y);
-						
-						line.d3.setViewPos(viewPos)
+		for(var i = 0; i < layers.length; i++) {
+			if(layers.hasOwnProperty(i)){
+				var line 				= layers[i];
+				var firstLetter = line.getText().substring(0,1);
+				
+				for(var j = 0; j < font.offsets.length; j++) {
+					if(font.offsets.hasOwnProperty(j)){
+						if(font.offsets[j][0] == firstLetter){
+							var offset = font.offsets[j][1]*offsetScale;
+							//debug.log(origin.name+": "+offset+" | offsetScale: "+offsetScale)
+							if(!is3D) {
+								line.pos.setX(x+offset);
+							} else {
+								var viewPos = new Vec2(line.d3.getViewPos().x+offset, line.d3.getViewPos().y);
+								
+								line.d3.setViewPos(viewPos)
+							}
+						}
 					}
 				}
 			}
@@ -120,13 +124,13 @@ var Paragraph = function(origin, container, padding) {
 	};
 	
 	this.disable = function() {
-		for(i in layers) {
+		for(var i = 0; i < layers.length ; i++) {
 			layers[i].disable();
 		}
 	};
 	
 	this.purge = function() {
-	  for(i in layers) {
+		for(var i = 0; i < layers.length ; i++) {
 			layers[i].remove();
 		}
 		layers = null;
@@ -134,7 +138,7 @@ var Paragraph = function(origin, container, padding) {
 	};
 	
 	this.enable = function() {
-		for(i in layers) {
+		for(var i = 0; i < layers.length ; i++) {
 			layers[i].enable();
 		}
 	};
@@ -148,7 +152,7 @@ var Paragraph = function(origin, container, padding) {
       
 			layers = splitTextLayer();
 
-			for(i in layers) {
+			for(var i = 0; i < layers.length ; i++) {
 				var index = i;
 				
 				if(direction == 'down') {
@@ -224,9 +228,11 @@ var Paragraph = function(origin, container, padding) {
 		//this.cleanUpContainingComp(layer, clonePrefix);
 	
 		layers = [];
-		for(i in lines) {
-			layers.push(origin.clone().setText(lines[i]));
-			layers[i].name = clonePrefix + origin.name + "-" + i;
+		for(var i = 0; i < lines.length; i++) {
+			if(lines.hasOwnProperty(i)){
+				layers.push(origin.clone().setText(lines[i]));
+				layers[i].name = clonePrefix + origin.name + "-" + i;
+			}
 		}
 
 		return layers;
@@ -243,7 +249,7 @@ var Paragraph = function(origin, container, padding) {
 		var width = 0;
 		var linewidth = 0;
 		if(layers.length > 0) {			
-			for(i in layers) {
+			for(var i = 0; i < layers.length; i++) {
 				linewidth = layers[i].d3.getProjectedSize().w;
 
 				if(linewidth > width) {
@@ -261,51 +267,56 @@ utils.normalizeTextLines = function(layer, lines, projectedMaxWidth) {
 	var widths = [];
 	var lineWords = [];
 	
-	for(i in lines){
-		widths.push(layer.d3.getProjectedTextSize(lines[i]).w);
-		lineWords.push(utils.splitText(lines[i]));
+	for(var i = 0; i < lines.length; i++){
+		if(lines.hasOwnProperty(i)){
+			widths.push(layer.d3.getProjectedTextSize(lines[i]).w);
+			lineWords.push(utils.splitText(lines[i]));
+		}
 	}
 	
-	for(j in lines){
-		
-		var width = widths[j];
-		var space = projectedMaxWidth - width;
-		
-		var prevLine = "";
-		if(j>0) {
-			prevLine = lineWords[j-1];
-			var lastWordInPrevLine = prevLine[prevLine.length - 1];
-			var wordWidth = layer.d3.getProjectedTextSize(lastWordInPrevLine).w;
-				if(wordWidth < space && widths[j-1] > widths[j]){
-					
-					if(widths[j-1]-wordWidth < wordWidth+widths[j] && j == 1) {
-						//debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
-						var word = lineWords[j-1].pop();
-						if(word.substring(word.length-1,word.length) != "-"){
-							word += " "
+	for(var j = 0; j < lines.length; j++){
+		if(lines.hasOwnProperty(j)){
+			var width = widths[j];
+			var space = projectedMaxWidth - width;
+			
+			var prevLine = "";
+			if(j>0) {
+				prevLine = lineWords[j-1];
+				var lastWordInPrevLine = prevLine[prevLine.length - 1];
+				var wordWidth = layer.d3.getProjectedTextSize(lastWordInPrevLine).w;
+					if(wordWidth < space && widths[j-1] > widths[j]){
+						
+						if(widths[j-1]-wordWidth < wordWidth+widths[j] && j == 1) {
+							//debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
+							var word = lineWords[j-1].pop();
+							if(word.substring(word.length-1,word.length) != "-"){
+								word += " "
+							}
+							if(word == "-"){
+								word += " ";
+							}
+							lineWords[j].unshift(word);
+						} else if(widths[j-1]-wordWidth > wordWidth+widths[j]) {
+							//debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
+							var word = lineWords[j-1].pop();
+							if(word.substring(word.length-1,word.length) != "-"){
+								word += " ";
+							}
+							if(word == "-"){
+								word += " ";
+							}
+							lineWords[j].unshift(word);
 						}
-						if(word == "-"){
-							word += " ";
-						}
-						lineWords[j].unshift(word);
-					} else if(widths[j-1]-wordWidth > wordWidth+widths[j]) {
-						//debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
-						var word = lineWords[j-1].pop();
-						if(word.substring(word.length-1,word.length) != "-"){
-							word += " ";
-						}
-						if(word == "-"){
-							word += " ";
-						}
-						lineWords[j].unshift(word);
 					}
-				}
+			}
 		}
 	}
 	
 	lines = [];
-	for(k in lineWords){
-		lines.push(lineWords[k].join(""));
+	for(var k = 0; k < lineWords.length; k++){
+		if(lineWords.hasOwnProperty(k)){
+			lines.push(lineWords[k].join(""));
+		}
 	}
 	
 	return lines;
@@ -334,27 +345,29 @@ utils.stripNewlines = function(str){
 
 utils.splitText = function(str) {
 	var splitArray = [];
-	str = str.replace(/\/\//g,' // ');
-	var spaceArr = str.split(/[ ]/);
-	for(i in spaceArr){
-		if(i<spaceArr.length-1){
-	  	spaceArr[i] = spaceArr[i] + " ";
-	  }
-
-	  var dashArr = spaceArr[i].split(/[-]/);
-    if(dashArr.length > 1){
-      for(j in dashArr){
-        if(j<dashArr.length-1) {
-          dashArr[j] = dashArr[j] + "-";
-          splitArray.push(dashArr[j]);
-        } else {
-          splitArray.push(dashArr[j]);
-        }
-      }
-    } else {
-      splitArray.push(spaceArr[i]);
-    }
-
+	if(typeof str === 'string'){
+		str = str.replace(/\/\//g,' // ');
+		var spaceArr = str.split(/[ ]/);
+		for(var i = 0; i < spaceArr.length ; i++){
+			if(i<spaceArr.length-1){
+				  spaceArr[i] = spaceArr[i] + " ";
+			  }
+			  if(typeof spaceArr[i] === 'string'){
+				var dashArr = spaceArr[i].split(/[-]/);
+				if(dashArr.length > 1){
+					  for(var j = 0; j < dashArr.length; j++){
+						if(j<dashArr.length-1) {
+							  dashArr[j] = dashArr[j] + "-";
+							  splitArray.push(dashArr[j]);
+						} else {
+							  splitArray.push(dashArr[j]);
+						}
+					  }
+				} else {
+					  splitArray.push(spaceArr[i]);
+				}
+			  }
+		}
 	}
 	return splitArray;	
 };
