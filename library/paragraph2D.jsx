@@ -183,7 +183,7 @@ var Paragraph2D = function(origin, container, options) {
 				var index = i;
 				if(this.layers[index] !== undefined && this.layers[index].pos !== undefined){
 					var line = this.layers[index];
-					debug.log("line: "+line.name);
+					//debug.log("line: "+line.name);
 					var npos = line.pos.get();
 					npos.y += (i) * offset;
 					var prop = line.property("Position");
