@@ -18,7 +18,7 @@ function DR_Utils_C() {
         {name: "DRU", logoShape: "SQUARE", color: [228, 255, 23] },
         {name: "DRK", logoShape: "SQUARE", color: [87, 49, 140] },
         {name: "DRR", logoShape: "SQUARE", color: [0, 254, 254 ] },
-    
+        
         {name: "P1", logoShape: "RECTANGLE", color: [ 255, 100, 0] },
         {name: "P2", logoShape: "RECTANGLE", color: [0, 50, 160 ] },
         {name: "P3", logoShape: "RECTANGLE", color: [140, 160, 160] },
@@ -28,11 +28,11 @@ function DR_Utils_C() {
         {name: "P7", logoShape: "RECTANGLE", color: [0, 159, 139] },
         {name: "P8", logoShape: "RECTANGLE", color: [115, 45, 140] },
 
+        {name: "DR", logoShape: "RECTANGLE", color: [0, 0, 0 ] },
+
         {name: "LB", logoShape: "RECTANGLE", color: [0,0,0] }, // DEPRECATE
 
         {name: "DRDK", logoShape: "RECTANGLE", color: [5, 9, 2 ] },
-
-        {name: "DR", logoShape: "RECTANGLE", color: [0, 0, 0 ] },
         
         {name: "DRTV", logoShape: "RECTANGLE", color: [255, 212, 0 ] }
     ];
