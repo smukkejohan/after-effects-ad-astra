@@ -10,8 +10,8 @@ colors in comments picked from logos in IPP project 2017
 function DR_Utils_C() {
 
     var CHANNELS = [
-        // TODO: change to something like widthAsPercentOfHeight instead of logoShape 
 
+        // TODO: change to something like widthAsPercentOfHeight instead of logoShape 
         {name: "DR1", logoShape: "SQUARE", color: [255, 0, 30] },
         {name: "DR2", logoShape: "SQUARE", color: [0, 200, 255] },
         {name: "DR3", logoShape: "SQUARE", color: [0, 215, 0] },
@@ -31,6 +31,9 @@ function DR_Utils_C() {
         {name: "LB", logoShape: "RECTANGLE", color: [0,0,0] }, // DEPRECATE
 
         {name: "DRDK", logoShape: "RECTANGLE", color: [5, 9, 2 ] },
+
+        {name: "DR", logoShape: "RECTANGLE", color: [0, 0, 0 ] },
+        
         {name: "DRTV", logoShape: "RECTANGLE", color: [255, 212, 0 ] }
     ];
 

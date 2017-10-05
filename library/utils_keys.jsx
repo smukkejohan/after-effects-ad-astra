@@ -69,7 +69,7 @@
 			var propNames = [];
 			var selProp = prop;
 			var _depth = prop.propertyDepth;
-			//$.bp();
+			
 			for(var j=1; j<=_depth; j++) {
 				propNames.push(selProp.matchName);
 				selProp = selProp.parentProperty;

@@ -124,7 +124,7 @@
 	utils.getFootageParam = function(number){
 		var footage = utils.getClipsParams();
 		for(var i=0;i<footage.length;i++){
-			if(footage[i].name.toUpperCase() == '{FOOTAGE-'+number+'}'){
+			if(footage[i].name.toUpperCase() === '{FOOTAGE-'+number+'}'){
 				return footage[i].substitute;
 			}
 		}
@@ -133,7 +133,7 @@
 	utils.getSpeakParam = function(number){
 		var footage = utils.getClipsParams();
 		for(var i=0;i<footage.length;i++){
-			if(footage[i].name.toUpperCase() == '{SPEAK-'+number+'}'){
+			if(footage[i].name.toUpperCase() === '{SPEAK-'+number+'}'){
 				return footage[i].substitute;
 			}
 		}
@@ -237,7 +237,7 @@
 		var proj = app.project;
 		for( var i = 1 ; i <= proj.numItems; i++) {
 			var item = proj.item(i);
-			if (item == comp || item.name == comp) {
+			if (item === comp || item.name === comp) {
 			  if(item instanceof CompItem) {
 				  // extend the returned comp with new awesome functions
 					item.clone = function(compName)                  	  			{ return utils.cloneComp(item, compName);        }
@@ -828,7 +828,7 @@
 		var prop = layer.property(propertyStr);
 		var keys = [];
 		for(var i=1; i<=prop.numKeys; i++) {
-			var value   = prop.valueAtTime(prop.keyTime(i), false);
+			var value = prop.valueAtTime(prop.keyTime(i), false);
 			keys.push([prop.keyTime(i), value]);
 		}
 		return keys;
@@ -969,8 +969,7 @@
 			removeLayers[i].remove();
 		}
 	};
-
-
+	
 	utils.getLayerMarkerIndexByComment = function(layer, comment)
   {
     try{

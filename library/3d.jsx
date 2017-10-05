@@ -16,7 +16,6 @@
 
 {
   
-  
   var viewportProperties = "origin pointOfInterest dimensions zoom fov projectionPlaneDistance";
 	var Viewport = _.makeStruct(viewportProperties);
 
