@@ -1,4 +1,4 @@
-﻿// Debugging level
+﻿﻿// Debugging level
 //  0: No debugging
 //  1: Break on runtime errors
 //  2: Full debug mode // note this is set in miranda.jsx
@@ -54,12 +54,13 @@ $.evalFile(PATH + "/library/prototype.jsx");
               if (usageComp) {
                 var layers = usageComp.getAllLayers();
                 for (var il = 0; il < layers.length; il++) {
+                    if(layers[il].hasVideo === true){
                   try {
                     layers[il].scaleToHD();
                   } catch (e) {
                   }
-
                   layers[il].setTimeRemap();
+                  }
                 }
               }
 
@@ -67,11 +68,13 @@ $.evalFile(PATH + "/library/prototype.jsx");
               if (usageComp2) {
                 var layers = usageComp2.getAllLayers();
                 for (var il = 0; il < layers.length; il++) {
-                  try {
-                    layers[il].scaleToHD();
-                  } catch (e) {
+                  if(layers[il].hasVideo === true){
+                    try {
+                      layers[il].scaleToHD();
+                    } catch (e) {
+                    }
+                    layers[il].setTimeRemap();
                   }
-                  layers[il].setTimeRemap();
                 }
               }
             }
@@ -113,7 +116,6 @@ remoteLog("Could not import "+SubsParams.clips[i].substitute+ " Error: "+e.messa
       SETTINGS = project.SETTINGS;
       project.create();
       }
-
 	};
 
 	app.beginUndoGroup("UNDO LOVENEST");
