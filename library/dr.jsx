@@ -35,12 +35,12 @@ function DR_Utils_C() {
 
     this.getAllChannels = function() {
         return CHANNELS.slice();
-    }
+    };
 
     this.getChannelColor = function(logo) { 
         // AE needs decimal values, but AE's color picker displays them as 0-255
         return this.getChannelInfo(logo).color / 255.0;
-    }  
+    };
 
     this.getChannelInfo = function(channel) {
         var channels = this.getAllChannels();
@@ -49,7 +49,7 @@ function DR_Utils_C() {
                 return channels[i];
             }
         }
-    }
+    };
 
     this.isChannelLogoSquare = function(logo) {
         return this.getChannelInfo(logo).logoShape === "SQUARE";
