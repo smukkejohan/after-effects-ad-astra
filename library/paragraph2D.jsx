@@ -50,7 +50,10 @@ var Paragraph2D = function(origin, container, options) {
 	};
 
   getTextSize = function(layer, word){
-    word = word.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+		if(typeof word !== "string")
+			return {w:0, h:0};
+
+		word = word.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 
     if(!word)
       return {w:0, h:0};
@@ -67,9 +70,9 @@ var Paragraph2D = function(origin, container, options) {
 		widths = [];
 		words = utils.splitText(origin.getText());
 
-		for(i in words) {
+		for(var i = 0; i < words.length;i++) {
 			var debugOrigin = origin;
-      widths.push( getTextSize(origin, words[i]).w);
+      		widths.push( getTextSize(origin, words[i]).w);
 		}	
 	};
 
@@ -85,11 +88,11 @@ var Paragraph2D = function(origin, container, options) {
 			var offsetScale = font.CalcFromSize/fontSize;
 			var x           = origin.pos.getX();
 
-			for(i in this.layers) {
+			for(var i = 0; i < this.layers.length; i++) {
 				var line 				= this.layers[i];
 				var firstLetter = line.getText().substring(0,1);
 
-				for(j in font.offsets) {
+				for(var j = 0; j < font.offsets.length; j++) {
 					if(font.offsets[j][0] == firstLetter){
 						var offset = font.offsets[j][1]*offsetScale;
 						line.pos.setX(x+offset);
@@ -139,13 +142,13 @@ var Paragraph2D = function(origin, container, options) {
 	};
 
 	this.disable = function() {
-		for(i in this.layers) {
+		for(var i = 0; i < this.layers.length; i++) {
 			this.layers[i].disable()
 		}
 	};
 
 	this.purge = function() {
-		for(var i=0;i<this.layers.length;i++) {
+		for(var i = 0; i < this.layers.length; i++) {
 			try{
 				this.layers[i].remove()
 			} catch(e) {
@@ -159,7 +162,7 @@ var Paragraph2D = function(origin, container, options) {
 	};
 
 	this.enable = function() {
-		for(i in this.layers) {
+		for(var i = 0; i < this.layers.length; i++) {
 			this.layers[i].enable()
 		}
 	};
@@ -176,24 +179,24 @@ var Paragraph2D = function(origin, container, options) {
         		return;
       		}
 
-			for(i in this.layers) {
+			  for(var i = 0; i < this.layers.length; i++) {
 				var index = i;
-
-				var line = this.layers[index];
-				//debug.log("line: "+line.name)
-
-				var npos = line.pos.get();
-				npos.y += (i) * offset;
-				var prop = line.property("Position");
-
-				if(prop.numKeys != 0){
-					for(var i=1; i<=prop.numKeys; i++) {
-						var value   = prop.valueAtTime(prop.keyTime(i), false);
-
-						line.setPos([value[0], npos.y], prop.keyTime(i));
+				if(this.layers[index] !== undefined && this.layers[index].pos !== undefined){
+					var line = this.layers[index];
+					//debug.log("line: "+line.name);
+					var npos = line.pos.get();
+					npos.y += (i) * offset;
+					var prop = line.property("Position");
+	
+					if(prop.numKeys != 0){
+						for(var i=1; i<=prop.numKeys; i++) {
+							var value   = prop.valueAtTime(prop.keyTime(i), false);
+	
+							line.setPos([value[0], npos.y], prop.keyTime(i));
+						}
+					} else {
+						line.setPos([npos.x, npos.y], 0);
 					}
-				} else {
-					line.setPos([npos.x, npos.y], 0);
 				}
 			}
 
@@ -309,7 +312,7 @@ var Paragraph2D = function(origin, container, options) {
 			this.layers.push(origin);
 		}
 		else {*/
-			for(i in lines) {
+			for(var i=0; i < lines.length; i++) {
 				this.layers.push(origin.clone().setText(lines[i]));
 				this.layers[i].name = clonePrefix + origin.name + "-" + i;
 			}
@@ -333,7 +336,7 @@ var Paragraph2D = function(origin, container, options) {
 		var width = 0;
 		var linewidth = 0;
 		if(this.layers.length > 0) {
-			for(i in this.layers) {
+			for(var i = 0; i < this.layers.length; i++) {
 				linewidth = this.layers[i].getSize().w;
 
 				if(linewidth > width) {
@@ -350,7 +353,7 @@ var Paragraph2D = function(origin, container, options) {
 		comp = _.getComp(comp.name);
 		//var compLayers = [];
 
-		for(i in this.layers){
+		for(var i=0; i < this.layers.length; i++){
 			this.layers[i].disable();
 			this.layers[i].copyToComp(comp);
 		}
@@ -381,57 +384,58 @@ utils.normalize2DTextLines = function(layer, lines, projectedMaxWidth) {
 	var lineWords = [];
    var anyChanges = false;
 
-	for(i in lines){
+	for(var i = 0; i < lines.length; i++){
 		widths.push(layer.getTextSize(lines[i]).w);
 		lineWords.push(utils.splitText(lines[i]));
 	}
 
-	for(j in lines){
+	for(var j = 0; j < lines.length; j++){
+		if(typeof widths[j] !== 'function'){
+			var width = widths[j];
+			var space = projectedMaxWidth - width;
 
-		var width = widths[j];
-		var space = projectedMaxWidth - width;
+			var prevLine = "";
+			if(j>0) {
+				prevLine = lineWords[j-1];
 
-		var prevLine = "";
-		if(j>0) {
-			prevLine = lineWords[j-1];
+				if( widths[j-1] > widths[j]){
+					var lastWordInPrevLine = prevLine[prevLine.length - 1];
+					var wordWidth = getTextSize(layer, lastWordInPrevLine).w;
 
-      if( widths[j-1] > widths[j]){
-        var lastWordInPrevLine = prevLine[prevLine.length - 1];
-        var wordWidth = getTextSize(layer, lastWordInPrevLine).w;
+					//Dont move words if its ending with colon or is a linebreak (//)
+					if(lastWordInPrevLine.substr(lastWordInPrevLine.length - 1) !== ":"
+						&& lastWordInPrevLine !== "//"){
 
-        //Dont move words if its ending with colon or is a linebreak (//)
-        if(lastWordInPrevLine.substr(lastWordInPrevLine.length - 1) !== ":"
-          && lastWordInPrevLine !== "//"){
+						if(wordWidth < space ){
 
-          if(wordWidth < space ){
+							//Hmm hvad gør det her godt for?!
 
-            //Hmm hvad gør det her godt for?!
+							/*if(widths[j-1]-wordWidth < wordWidth+widths[j] && j == 1) {
+									debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
+									var word = lineWords[j-1].pop();
+									if(word.substring(word.length-1,word.length) != "-"){
+										word += " "
+									}
+									if(word == "-"){
+										word += " ";
+									}
+									lineWords[j].unshift(word);
+							} else*/
 
-            /*if(widths[j-1]-wordWidth < wordWidth+widths[j] && j == 1) {
-                debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
-                var word = lineWords[j-1].pop();
-                if(word.substring(word.length-1,word.length) != "-"){
-                  word += " "
-                }
-                if(word == "-"){
-                  word += " ";
-                }
-                lineWords[j].unshift(word);
-            } else*/
-
-            if(widths[j-1]-wordWidth > wordWidth+widths[j]) {
-                debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
-                anyChanges = true;
-                var word = lineWords[j-1].pop();
-                if(word.substring(word.length-1,word.length) != "-"){
-                  word += " ";
-                }
-                if(word == "-"){
-                  word += " ";
-                }
-                lineWords[j].unshift(word);
-            }
-          }
+							if(widths[j-1]-wordWidth > wordWidth+widths[j]) {
+									debug.log("WORD MOVED: "+lastWordInPrevLine +" | from line: "+prevLine.join(""));
+									anyChanges = true;
+									var word = lineWords[j-1].pop();
+									if(word.substring(word.length-1,word.length) != "-"){
+										word += " ";
+									}
+									if(word == "-"){
+										word += " ";
+									}
+									lineWords[j].unshift(word);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -441,7 +445,7 @@ utils.normalize2DTextLines = function(layer, lines, projectedMaxWidth) {
     return false;
   }
 	lines = [];
-	for(k in lineWords){
+	for(var k = 0; k < lineWords.length; k++){
 		lines.push(lineWords[k].join(""));
 	}
 

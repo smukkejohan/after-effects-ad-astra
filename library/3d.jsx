@@ -16,7 +16,6 @@
 
 {
   
-  
   var viewportProperties = "origin pointOfInterest dimensions zoom fov projectionPlaneDistance";
 	var Viewport = _.makeStruct(viewportProperties);
 
@@ -99,8 +98,9 @@
 			
 			this.viewport = viewport;
 			return this.viewport;
-		},		
-		
+		},
+	
+	
 		
 		/* Add awesome 3d space functions as inline shorthands to our layers */
 		enhanceLayer: function(layer) {	
@@ -118,6 +118,10 @@
 			  tmplayer.remove();
 			  return size;
 			};
+			
+			
+			
+			
 			
 			layer.d3.test = function() {
 				alert("This Layer has been d3 enhanced!")

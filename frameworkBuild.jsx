@@ -1,4 +1,4 @@
-﻿// Debugging level
+﻿﻿// Debugging level
 //  0: No debugging
 //  1: Break on runtime errors
 //  2: Full debug mode // note this is set in miranda.jsx
@@ -16,19 +16,16 @@ $.evalFile(PATH + "/library/prototype.jsx");
   $.evalFile(PATH + "/library/debug.jsx");
   $.evalFile(PATH + "/library/log.jsx");
   $.evalFile(PATH + "/library/fonts.jsx");
-
   $.evalFile(PATH + "/library/utils.jsx");
   $.evalFile(PATH + "/library/utils_keys.jsx");
-
   $.evalFile(PATH + "/library/vectorMath.jsx");
   $.evalFile(PATH + "/library/3d.jsx");
-
   $.evalFile(PATH + "/library/paragraph.jsx");
   $.evalFile(PATH + "/library/paragraph2D.jsx");
-  
   $.evalFile(PATH + "/library/dr_tv.jsx");
+  $.evalFile(PATH + "/library/dr.jsx");
   
-    // Define Global variables
+  // Define Global variables
 	var mainComp, projectName, project, path, projectVersion;
 
   var handleFootage = function(){
@@ -57,12 +54,13 @@ $.evalFile(PATH + "/library/prototype.jsx");
               if (usageComp) {
                 var layers = usageComp.getAllLayers();
                 for (var il = 0; il < layers.length; il++) {
+                    if(layers[il].hasVideo === true){
                   try {
                     layers[il].scaleToHD();
                   } catch (e) {
                   }
-
                   layers[il].setTimeRemap();
+                  }
                 }
               }
 
@@ -70,11 +68,13 @@ $.evalFile(PATH + "/library/prototype.jsx");
               if (usageComp2) {
                 var layers = usageComp2.getAllLayers();
                 for (var il = 0; il < layers.length; il++) {
-                  try {
-                    layers[il].scaleToHD();
-                  } catch (e) {
+                  if(layers[il].hasVideo === true){
+                    try {
+                      layers[il].scaleToHD();
+                    } catch (e) {
+                    }
+                    layers[il].setTimeRemap();
                   }
-                  layers[il].setTimeRemap();
                 }
               }
             }
@@ -89,7 +89,6 @@ remoteLog("Could not import "+SubsParams.clips[i].substitute+ " Error: "+e.messa
       }
     }
   };
-
 
   var build = function() {
       if( !app.project ) {
