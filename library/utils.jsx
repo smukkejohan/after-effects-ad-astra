@@ -1,4 +1,4 @@
-﻿var utils = new Object();
+var utils = new Object();
 var _ = utils; // shorthand
 
 utils.importProject = function (path) {

@@ -1,5 +1,5 @@
 {
-  var DR2CalibreBlackoffsets = [
+  var CalibreBlackoffsets = [
   	["A", -1],
   	["B", -3],
   	["C", -2],
@@ -70,7 +70,7 @@
   	["0", -2],
   ];
 
-  var DR2CalibreLightoffsets = [
+  var CalibreLightoffsets = [
   	["A", -2],
   	["B", -4],
   	["C", -2.5],
@@ -142,14 +142,14 @@
   ];
 
   var Font = {
-  	"DR2-Calibre-Black": {
-  		name: "DR2 Calibre Black",
-  		offsets: DR2CalibreBlackoffsets,
+  	"Calibre-Black": {
+  		name: "Calibre Black",
+  		offsets: CalibreBlackoffsets,
   		CalcFromSize: 100
   	},
-  	"DR2-Calibre-Light": {
-  		name: "DR2 Calibre Light",
-  		offsets: DR2CalibreLightoffsets,
+  	"Calibre-Light": {
+  		name: "Calibre Light",
+  		offsets: CalibreLightoffsets,
   		CalcFromSize: 100
   	},
   };
