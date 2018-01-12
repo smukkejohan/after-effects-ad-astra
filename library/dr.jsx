@@ -12,25 +12,25 @@ function DR_Utils_C() {
     var CHANNELS = [
 
         // TODO: change to something like widthAsPercentOfHeight instead of logoShape 
-        {name: "DR1", logoShape: "SQUARE", color: [255, 0, 30] },
-        {name: "DR2", logoShape: "SQUARE", color: [0, 200, 255] },
-        {name: "DR3", logoShape: "SQUARE", color: [0, 215, 0] },
-        {name: "DRU", logoShape: "SQUARE", color: [228, 255, 23] },
-        {name: "DRK", logoShape: "SQUARE", color: [87, 49, 140] },
-        {name: "DRR", logoShape: "SQUARE", color: [0, 254, 254 ] },
-        {name: "P1", logoShape: "RECTANGLE", color: [ 255, 100, 0] },
-        {name: "P2", logoShape: "RECTANGLE", color: [0, 50, 160 ] },
-        {name: "P3", logoShape: "RECTANGLE", color: [140, 160, 160] },
-        {name: "P4", logoShape: "RECTANGLE", color: [255, 160, 0] },
-        {name: "P5", logoShape: "RECTANGLE", color: [210, 28, 93 ] },
-        {name: "P6", logoShape: "RECTANGLE", color: [80, 75, 80 ] },
-        {name: "P7", logoShape: "RECTANGLE", color: [0, 159, 139] },
-        {name: "P8", logoShape: "RECTANGLE", color: [115, 45, 140] },
-        {name: "DR", logoShape: "RECTANGLE", color: [0, 0, 0 ] },
-        {name: "LB", logoShape: "RECTANGLE", color: [0,0,0] }, // DEPRECATE
-        {name: "DRDK", logoShape: "RECTANGLE", color: [5, 9, 2 ] },
-        {name: "DRTV", logoShape: "RECTANGLE", color: [255, 212, 0 ] },
-        {name: "DR", logoShape: "RECTANGLE", color: [255, 0, 30] },
+        {name: "DR1", logo: {width:80, height:80}, color: [255, 0, 30] },
+        {name: "DR2", logo: {width:80, height:80}, color: [0, 200, 255] },
+        {name: "DR3", logo: {width:80, height:80}, color: [0, 215, 0] },
+        {name: "DRU", logo: {width:80, height:80}, color: [228, 255, 23] },
+        {name: "DRK", logo: {width:80, height:80}, color: [87, 49, 140] },
+        {name: "DRR", logo: {width:80, height:80}, color: [0, 254, 254 ] },
+        {name: "P1", logo: {width:120, height:80}, color: [ 255, 100, 0] },
+        {name: "P3", logo: {width:120, height:80}, color: [140, 160, 160] },
+        {name: "P2", logo: {width:120, height:80}, color: [0, 50, 160 ] },
+        {name: "P4", logo: {width:120, height:80}, color: [255, 160, 0] },
+        {name: "P5", logo: {width:120, height:80}, color: [210, 28, 93 ] },
+        {name: "P6", logo: {width:120, height:80}, color: [80, 75, 80 ] },
+        {name: "P7", logo: {width:120, height:80}, color: [0, 159, 139] },
+        {name: "P8", logo: {width:120, height:80}, color: [115, 45, 140] },
+        {name: "DR", logo: {width:120, height:80}, color: [0, 0, 0 ] },
+        {name: "LB", logo: {width:120, height:80}, color: [0,0,0] }, // DEPRECATE
+        {name: "DRDK", logo: {width:120, height:80}, color: [5, 9, 2 ] },
+        {name: "DRTV", logo: {width:120, height:80}, color: [255, 212, 0 ] },
+        {name: "DR", logo: {width:130, height:41}, color: [255, 0, 30] }, // 40.625
     ];
 
     this.getAllChannels = function() {
@@ -51,8 +51,18 @@ function DR_Utils_C() {
         }
     };
 
-    this.isChannelLogoSquare = function(logo) {
-        return this.getChannelInfo(logo).logoShape === "SQUARE";
+    this.getChannelLogoWidthInPixels = function(channel) {
+        return this.getChannelInfo(channel).logo.width;
+    };
+
+    this.getChannelLogoHeightInPixels = function(channel) {
+        return this.getChannelInfo(channel).logo.height;
+    };
+
+    this.isChannelLogoSquare = function(channel) {
+        var logoInfo = this.getChannelInfo(channel).logo;
+
+        return (logoInfo.width === logoInfo.height);
     }; 
 }
 
