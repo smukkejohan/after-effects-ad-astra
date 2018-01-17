@@ -2,6 +2,26 @@
  
     var DR_TV = new Object();
     
+
+// TODO: new add logovender comp that can be used multiple times and is compatible with mastergrid  
+// TODO: make sure we have overlap for takeover on DRK and DR3 ... 
+
+    /*
+
+        Add drtv logo takeover with otional label
+
+        options = {
+            title: 
+        }
+    */
+    DR_TV.add = function(inTimeSeconds, outTimeSeconds, options) {
+
+        
+
+    };
+
+
+
     DR_TV.addLogoVender = function (_logoComp, _placeLogoLayerName, _i) {
     
             var logoComp;
@@ -74,8 +94,6 @@
                     endLogoLayer.inPoint  = tO;
                     startLogoLayer.outPoint = tI;
                 }
-                
-
             }
         };
 }
