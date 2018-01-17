@@ -26,9 +26,13 @@ function DR_Utils_C() {
         {name: "P6", logo: {width:120, height:80}, color: [80, 75, 80 ] },
         {name: "P7", logo: {width:120, height:80}, color: [0, 159, 139] },
         {name: "P8", logo: {width:120, height:80}, color: [115, 45, 140] },
-        {name: "DRDK", logo: {width:120, height:80}, color: [5, 9, 2 ] },
+        
+        {name: "DRDK", logo: {width:120, height:80}, color: [77, 77, 77] },
+
         {name: "DRTV", logo: {width:120, height:80}, color: [255, 212, 0 ] },
-        {name: "DR", logo: {width:130, height:41}, color: [255, 0, 30] }, // 40.625
+
+        {name: "DR", logo: {width:130, height:41}, color: [0, 0, 0] }, // 40.625
+
         {name: "NO_LOGO", logo: {width:0, height:0}, color: null }, // 40.625
     ];
 
