@@ -643,6 +643,8 @@
 
     //utils.setTextProperty = function()
 
+
+	// see http://docs.aenhancers.com/other/textdocument/
     utils.setLayerTextProperty = function(layer, property, value){
         try{
 			var textProp = layer.property("Source Text");
@@ -660,7 +662,7 @@
     };
 
 	utils.setLayerTextColor = function(layer, color){
-        return sutils.etLayerTextProperty(layer, "fillColor", color);
+        return utils.setLayerTextProperty(layer, "fillColor", color);
 	};
 
 	/* POSITION FUNCTIONS wOut vectors */

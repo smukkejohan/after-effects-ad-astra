@@ -4,7 +4,7 @@
 */
 
 /*
-colors in comments picked from logos in IPP project 2017
+ * colors in comments picked from logos in IPP project 2017
 */
 
 function DR_Utils_C() {
@@ -31,15 +31,16 @@ function DR_Utils_C() {
         {name: "DRDK", logo: {width:120, height:80}, color: [5, 9, 2 ] },
         {name: "DRTV", logo: {width:120, height:80}, color: [255, 212, 0 ] },
         {name: "DR", logo: {width:130, height:41}, color: [255, 0, 30] }, // 40.625
+        {name: "NO_LOGO", logo: {width:0, height:0}, color: null }, // 40.625
     ];
 
     this.getAllChannels = function() {
         return CHANNELS.slice();
     };
 
-    this.getChannelColor = function(logo) { 
+    this.getChannelColor = function(channel) { 
         // AE needs decimal values, but AE's color picker displays them as 0-255
-        return this.getChannelInfo(logo).color / 255.0;
+        return this.getChannelInfo(channel).color / 255.0;
     };
 
     this.getChannelInfo = function(channel) {

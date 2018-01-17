@@ -35,7 +35,7 @@ var Paragraph2D = function(origin, container, options) {
 			)
 
 		var assumedLineNum = origin.getSize().w / bounds.w;
-		assumedHeight = new Size(0, assumedLineNum * offset).h
+		assumedHeight = new Size(0, assumedLineNum * offset).h;
 
 		origin.disable();
 		getWordWidths();
@@ -49,7 +49,7 @@ var Paragraph2D = function(origin, container, options) {
 		return origin.name;
 	};
 
-  getTextSize = function(layer, word){
+  var getTextSize = function(layer, word){
 		if(typeof word !== "string")
 			return {w:0, h:0};
 
@@ -66,7 +66,7 @@ var Paragraph2D = function(origin, container, options) {
     return _textSizeCache[_textFontName+'_'+word];
   };
 
-	getWordWidths = function() {
+	var getWordWidths = function() {
 		widths = [];
 		words = utils.splitText(origin.getText());
 
@@ -163,12 +163,12 @@ var Paragraph2D = function(origin, container, options) {
 
 	this.enable = function() {
 		for(var i = 0; i < this.layers.length; i++) {
-			this.layers[i].enable()
+			this.layers[i].enable();
 		}
 	};
 
 	this.split = function() {
-		var w = origin.getSize().w
+		var w = origin.getSize().w;
 
 		if(w > bounds.w || origin.getText().indexOf("//") !== -1) {
 
@@ -205,11 +205,11 @@ var Paragraph2D = function(origin, container, options) {
 		}
 
 		if(this.layers === undefined || this.layers.length < 1) {
-			this.layers = [origin]
+			this.layers = [origin];
 		}
 
 		this.enable();
-		return this
+		return this;
 	};
 
 
@@ -233,7 +233,7 @@ var Paragraph2D = function(origin, container, options) {
       if(widths[i] == 0){
         words.shift();
       }
-      else if(word == "//" && !options.disableLinebreak){
+      else if(word === "//" && !options.disableLinebreak){
         //debug.log("New line")
         line.push(word);
         words.shift();
@@ -246,7 +246,7 @@ var Paragraph2D = function(origin, container, options) {
       else if(sum <= bounds.w){ //we are less then a whole line, lets push it to the line
         //debug.log("Push");
         line.push(word);
-        words.shift()
+        words.shift();
       }
       else if(widths[i] > bounds.w) { //The word itself is longer then the bounds
         //debug.log("Word "+words[0]+" is longer then bounds");
