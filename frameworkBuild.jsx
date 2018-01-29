@@ -46,6 +46,10 @@ $.evalFile(PATH + "/library/prototype.jsx"); {
 					comp.replace(fn);
 					remoteLog("Imported " + SubsParams.clips[i].substitute, "debug");
 
+          if(!comp.mainSource.isStill){
+            comp.mainSource.fieldSeparationType = FieldSeparationType.UPPER_FIELD_FIRST;
+          }
+
 					var match = SubsParams.clips[i].name.toString().match(/\{((\S+)-\d)\}/);
 
 					if (match) {
