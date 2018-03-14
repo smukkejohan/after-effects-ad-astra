@@ -1,5 +1,6 @@
 ﻿﻿var PATH = new File($.fileName).path;
 
+// deprecate this - include all dependencies instead from project itself
 $.evalFile(PATH + "/adastra.jsx");
 
 {
@@ -86,6 +87,7 @@ remoteLog("Could not import "+SubsParams.clips[i].substitute+ " Error: "+e.messa
 			SubsParams.params['BASEPATH'] = new File($.fileName).parent.parent.path;
 
 			// get all subprojects
+			// deprecate this 
 			if (File(PATH + "/../subprojects/subprojects.jsx").exists) {
 				$.evalFile(PATH + "/../subprojects/subprojects.jsx");
 			}
