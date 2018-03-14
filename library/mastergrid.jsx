@@ -110,7 +110,7 @@ function DR_Mastergrid_C() {
             var tLayer = topTextComp.getLayer("TOPTXT_42PX");
             tLayer.setText(o.label).enable();
             
-            topTextComp.duration = o.duration;
+            topTextComp.duration = o.duration - (transitionTimeSeconds*2);
             topTextLayer.startTime = o.inTimeSeconds + transitionTimeSeconds;
         }        
 
