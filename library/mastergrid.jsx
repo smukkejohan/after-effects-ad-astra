@@ -71,8 +71,8 @@ function DR_Mastergrid_C() {
         var outLayer = outComp.addToComp(o.stage);
 
         inPlaceLayer.startTime = o.inTimeSeconds;
-        inPlaceLayer.outPoint = o.outTimeSeconds;
-        outLayer.startTime = o.outTimeSeconds;
+        inPlaceLayer.outPoint = o.outTimeSeconds - transitionTimeSeconds;
+        outLayer.startTime = o.outTimeSeconds - transitionTimeSeconds;
         
         if(o.align === "LEFT") { // , center
             inPlaceLayer.setAnchor([0, logoLayer.getAnchor()[1]]);
@@ -93,18 +93,26 @@ function DR_Mastergrid_C() {
         if(project.SETTINGS.CHANNEL === "DRK" && o.label) {
             var topTextComp = _.getComp("DRK_TOPTEXT_SQ_IN+PLACE").clone("label " + o.uCID);
             var topTextLayer = topTextComp.addToComp(o.stage);
-
             var tLayer = topTextComp.getLayer("TOPTEXT_62PX");
             // out is fade opacity in 0.4 seconds
             tLayer.setText(o.label).enable();
             
             topTextComp.duration = o.duration;
-            topTextLayer.startTime = o.inTimeSeconds;
+            topTextLayer.startTime = o.inTimeSeconds + transitionTimeSeconds;
 
-            tLayer.transform.opacity.setValueAtTime(o.duration - 0.4, 100);
-            tLayer.transform.opacity.setValueAtTime(o.duration, 0);
+            tLayer.transform.opacity.setValueAtTime(o.duration - 0.4 - transitionTimeSeconds, 100);
+            tLayer.transform.opacity.setValueAtTime(o.duration - transitionTimeSeconds, 0);
         }
 
+        if(project.SETTINGS.CHANNEL === "DR3" && o.label) {
+            var topTextComp = _.getComp("DR3_TOPTEXT_SQ").clone("label " + o.uCID);
+            var topTextLayer = topTextComp.addToComp(o.stage);
+            var tLayer = topTextComp.getLayer("TOPTXT_42PX");
+            tLayer.setText(o.label).enable();
+            
+            topTextComp.duration = o.duration;
+            topTextLayer.startTime = o.inTimeSeconds + transitionTimeSeconds;
+        }        
 
         // add toptext next to 
         // o.label
