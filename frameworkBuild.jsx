@@ -1,7 +1,7 @@
-﻿﻿var PATH = new File($.fileName).path;
+﻿﻿var AIRLOOKFRAMEWORK_PATH = new File($.fileName).path;
 
 // deprecate this - include all dependencies instead from project itself
-$.evalFile(PATH + "/adastra.jsx");
+$.evalFile(AIRLOOKFRAMEWORK_PATH + "/adastra.jsx");
 
 {
 	var SETTINGS;
@@ -87,14 +87,14 @@ remoteLog("Could not import "+SubsParams.clips[i].substitute+ " Error: "+e.messa
 			SubsParams.params['BASEPATH'] = new File($.fileName).parent.parent.path;
 
 			// get all subprojects
-			if (File(PATH + "/../subprojects/subprojects.jsx").exists) {
-				$.evalFile(PATH + "/../subprojects/subprojects.jsx");
+			if (File(AIRLOOKFRAMEWORK_PATH + "/../subprojects/subprojects.jsx").exists) {
+				$.evalFile(AIRLOOKFRAMEWORK_PATH + "/../subprojects/subprojects.jsx");
 			}
 
-			
+
 
 			// get project file
-			$.evalFile(PATH + "/../scripts/" + projectName + ".jsx");
+			$.evalFile(AIRLOOKFRAMEWORK_PATH + "/../scripts/" + projectName + ".jsx");
 			SETTINGS = project.SETTINGS;
 			project.create();
 		}
