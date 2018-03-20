@@ -10,7 +10,6 @@
 function DR_Utils_C() {
 
     var CHANNELS = [
-
         // TODO: change to something like widthAsPercentOfHeight instead of logoShape 
         {name: "DR1", logo: {width:80, height:80}, color: [255, 0, 30] },
         {name: "DR2", logo: {width:80, height:80}, color: [0, 200, 255] },

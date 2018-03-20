@@ -282,12 +282,24 @@
 		return cloneComp;
 	};
 
+	utils.itemExists = function(itemName)
+	{
+		var proj = app.project;
+		for( var i = 1 ; i <= proj.numItems; i++) {
+			var item = proj.item(i);
+			if (item === itemName || item.name === itemName) {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	utils.getItem = function(itemName)
 	{
 		var proj = app.project;
 		for( var i = 1 ; i <= proj.numItems; i++) {
 			var item = proj.item(i);
-			if (item == itemName || item.name == itemName) {
+			if (item === itemName || item.name === itemName) {
 
 				// extend the returned comp with new awesome functions
 				item.getLayer = function(layerName) {
