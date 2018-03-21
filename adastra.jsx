@@ -5,6 +5,8 @@
 //  2: Full debug mode
 //  $.level = 2;
 
+// todo set variable to check if it has been included, so it only ever gets included once 
+
 var AIRLOOKFRAMEWORK_PATH = new File($.fileName).path;
 var OS = $.os;
 
