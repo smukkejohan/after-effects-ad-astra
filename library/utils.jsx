@@ -477,6 +477,7 @@
 		//layer.deepClone       = function(str)                            			{ return utils.deepCloneLayer(this, str); };
 		layer.scaleToHD       = function(time)                             			{ return utils.scaleLayerToHD(this, time); };
 		layer.setTimeRemap    = function(time)                             			{ return utils.setTimeRemap(this, time); };
+		layer.holdFrameAtTime = function(time)									    { return utils.holdFrameAtTime(this, time); };
 		layer.setStartTime 	  = function(time)									    { return utils.setStartTime(this, time); };
 		layer.setEndTime 	  = function(time)									    { return utils.setEndTime(this, time); };
 		layer.addToComp       = function(comp)                             			{ return utils.copyLayerToComp(this, comp); };
@@ -808,6 +809,16 @@
 		if(layer.canSetTimeRemapEnabled){
 			layer.timeRemapEnabled = true;
 			layer.outPoint = time;
+		}
+		return layer;
+	};
+
+	utils.holdFrameAtTime = function(layer, time) {
+		if(!time)	time = 0;
+		if(layer.canSetTimeRemapEnabled){
+			layer.timeRemapEnabled = true;
+			layer.timeRemap.setValueAtTime(layer.inPoint, time);
+			layer.timeRemap.setValueAtTime(layer.outPoint, time);
 		}
 		return layer;
 	};
