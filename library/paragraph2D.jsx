@@ -7,6 +7,23 @@
 var _textSizeCache =  {};
 var _textFontName;
 
+var getTextSize = function(layer, word){
+	if(typeof word !== "string")
+		return {w:0, h:0};
+
+	word = word.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+
+	if(!word)
+	return {w:0, h:0};
+
+	if(_textSizeCache[_textFontName+'_'+word] !== undefined){
+	return _textSizeCache[_textFontName+'_'+word];
+	}
+
+	_textSizeCache[_textFontName+'_'+word] = layer.getTextSize(word);
+	return _textSizeCache[_textFontName+'_'+word];
+};
+
 var Paragraph2D = function(origin, container, options) {
 
 	var font, bounds, direction;
@@ -48,23 +65,6 @@ var Paragraph2D = function(origin, container, options) {
 	this.getName = function() {
 		return origin.name;
 	};
-
-  var getTextSize = function(layer, word){
-		if(typeof word !== "string")
-			return {w:0, h:0};
-
-		word = word.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-
-    if(!word)
-      return {w:0, h:0};
-
-    if(_textSizeCache[_textFontName+'_'+word] !== undefined){
-      return _textSizeCache[_textFontName+'_'+word];
-    }
-
-    _textSizeCache[_textFontName+'_'+word] = layer.getTextSize(word);
-    return _textSizeCache[_textFontName+'_'+word];
-  };
 
 	var getWordWidths = function() {
 		widths = [];
@@ -400,7 +400,7 @@ utils.normalize2DTextLines = function(layer, lines, projectedMaxWidth) {
 
 				if( widths[j-1] > widths[j]){
 					var lastWordInPrevLine = prevLine[prevLine.length - 1];
-					var wordWidth = getTextSize(layer, lastWordInPrevLine).w;
+					var wordWidth = getTextSize(layer, lastWordInPrevLine).w; // error was here getTextSize is undefined
 
 					//Dont move words if its ending with colon or is a linebreak (//)
 					if(lastWordInPrevLine.substr(lastWordInPrevLine.length - 1) !== ":"
