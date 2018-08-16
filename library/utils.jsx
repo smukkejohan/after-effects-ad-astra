@@ -460,6 +460,7 @@
 	utils.enhanceLayer = function(layer) {
 
 		layer.setText         = function(str)                              			{ return utils.setLayerText(this, str); };
+		layer.resetParagraphStyle = function()										{ return utils.resetParagraphStyle(this); };
 		layer.getText         = function()		                           			{ return utils.getLayerText(this); };
         layer.getFontSize     = function()		                           			{ return utils.getFontSize(this); };
         layer.setFont   	  = function(font)							   			{ return utils.setLayerFont(this, font); };
@@ -644,18 +645,18 @@
 		return new Vec3(pos[0], pos[1], pos[2]);
 	};
 
-	utils.setLayerText = function(layer, str) {
-		if(typeof layer !== "function"){
-			if(str == undefined || typeof str !== "string") str = "";
-			layer.text.sourceText.setValue(str);
-			return layer;
-		}
-//		alert(layer);
-//		alert(str);
+	utils.resetParagraphStyle = function(layer) {
+		var textProp = layer.property("Source Text");
+		var textDocument = textProp.value;
+		textDocument.resetParagraphStyle();
+		textProp.setValue(textDocument);
 	};
 
-    //utils.setTextProperty = function()
-
+	utils.setLayerText = function(layer, str) {
+		//layer.text.sourceText.setValue(str);
+		utils.setLayerTextProperty(layer, "text", str);
+		return layer;
+	};
 
 	// see http://docs.aenhancers.com/other/textdocument/
     utils.setLayerTextProperty = function(layer, property, value){
@@ -664,8 +665,9 @@
 			var textDocument = textProp.value;
 			textDocument[property] = value;
 			textProp.setValue(textDocument);
+
 		} catch(e){
-			logger.warning("Could not set font of layer "+e);
+			logger.warning("Could not set text property of layer "+e);
 		}
 		return layer;
     };
