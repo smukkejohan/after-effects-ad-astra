@@ -39,12 +39,12 @@ utils.getTextSize = function(layer, word, fontID){
 	if(!word)
 	return {w:0, h:0};
 
-	if(_textSizeCache[fontID+'_'+word] !== undefined){
-	return _textSizeCache[fontID+'_'+word];
+	if(utils._textSizeCache[fontID+'_'+word] !== undefined){
+	return utils._textSizeCache[fontID+'_'+word];
 	}
 
-	_textSizeCache[fontID+'_'+word] = layer.getTextSize(word);
-	return _textSizeCache[fontID+'_'+word];
+	utils._textSizeCache[fontID+'_'+word] = layer.getTextSize(word);
+	return utils._textSizeCache[fontID+'_'+word];
 };
 
 
