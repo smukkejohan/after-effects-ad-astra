@@ -282,12 +282,24 @@
 		return cloneComp;
 	};
 
+	utils.itemExists = function(itemName)
+	{
+		var proj = app.project;
+		for( var i = 1 ; i <= proj.numItems; i++) {
+			var item = proj.item(i);
+			if (item === itemName || item.name === itemName) {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	utils.getItem = function(itemName)
 	{
 		var proj = app.project;
 		for( var i = 1 ; i <= proj.numItems; i++) {
 			var item = proj.item(i);
-			if (item == itemName || item.name == itemName) {
+			if (item === itemName || item.name === itemName) {
 
 				// extend the returned comp with new awesome functions
 				item.getLayer = function(layerName) {
@@ -448,6 +460,7 @@
 	utils.enhanceLayer = function(layer) {
 
 		layer.setText         = function(str)                              			{ return utils.setLayerText(this, str); };
+		layer.resetParagraphStyle = function()										{ return utils.resetParagraphStyle(this); };
 		layer.getText         = function()		                           			{ return utils.getLayerText(this); };
         layer.getFontSize     = function()		                           			{ return utils.getFontSize(this); };
         layer.setFont   	  = function(font)							   			{ return utils.setLayerFont(this, font); };
@@ -465,6 +478,7 @@
 		//layer.deepClone       = function(str)                            			{ return utils.deepCloneLayer(this, str); };
 		layer.scaleToHD       = function(time)                             			{ return utils.scaleLayerToHD(this, time); };
 		layer.setTimeRemap    = function(time)                             			{ return utils.setTimeRemap(this, time); };
+		layer.holdFrameAtTime = function(time)									    { return utils.holdFrameAtTime(this, time); };
 		layer.setStartTime 	  = function(time)									    { return utils.setStartTime(this, time); };
 		layer.setEndTime 	  = function(time)									    { return utils.setEndTime(this, time); };
 		layer.addToComp       = function(comp)                             			{ return utils.copyLayerToComp(this, comp); };
@@ -631,18 +645,18 @@
 		return new Vec3(pos[0], pos[1], pos[2]);
 	};
 
-	utils.setLayerText = function(layer, str) {
-		if(typeof layer !== "function"){
-			if(str == undefined || typeof str !== "string") str = "";
-			layer.text.sourceText.setValue(str);
-			return layer;
-		}
-//		alert(layer);
-//		alert(str);
+	utils.resetParagraphStyle = function(layer) {
+		var textProp = layer.property("Source Text");
+		var textDocument = textProp.value;
+		textDocument.resetParagraphStyle();
+		textProp.setValue(textDocument);
 	};
 
-    //utils.setTextProperty = function()
-
+	utils.setLayerText = function(layer, str) {
+		//layer.text.sourceText.setValue(str);
+		utils.setLayerTextProperty(layer, "text", str);
+		return layer;
+	};
 
 	// see http://docs.aenhancers.com/other/textdocument/
     utils.setLayerTextProperty = function(layer, property, value){
@@ -651,8 +665,9 @@
 			var textDocument = textProp.value;
 			textDocument[property] = value;
 			textProp.setValue(textDocument);
+
 		} catch(e){
-			logger.warning("Could not set font of layer "+e);
+			logger.warning("Could not set text property of layer "+e);
 		}
 		return layer;
     };
@@ -796,6 +811,16 @@
 		if(layer.canSetTimeRemapEnabled){
 			layer.timeRemapEnabled = true;
 			layer.outPoint = time;
+		}
+		return layer;
+	};
+
+	utils.holdFrameAtTime = function(layer, time) {
+		if(!time)	time = 0;
+		if(layer.canSetTimeRemapEnabled){
+			layer.timeRemapEnabled = true;
+			layer.timeRemap.setValueAtTime(layer.inPoint, time);
+			layer.timeRemap.setValueAtTime(layer.outPoint, time);
 		}
 		return layer;
 	};
