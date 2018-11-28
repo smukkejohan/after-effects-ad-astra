@@ -20,7 +20,6 @@ $.evalFile(PATH + "/library/vectorMath.jsx");
 $.evalFile(PATH + "/library/3d.jsx");
 $.evalFile(PATH + "/library/paragraph.jsx"); // TODO: Update with new boxText methods
 $.evalFile(PATH + "/library/paragraph2D.jsx");
-$.evalFile(PATH + "/library/dr_tv.jsx");
 $.evalFile(PATH + "/library/dr.jsx");
 $.evalFile(PATH + "/library/mastergrid.jsx");
 
