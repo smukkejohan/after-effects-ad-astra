@@ -93,8 +93,6 @@
 
 			viewport = new Viewport(origin, pointOfInterest, viewportDimensions, zoom, fovDeg, projectionPlaneDistance);
       
-			//debug.log(viewport.dimensions.w + "x" + viewport.dimensions.h + " @" + viewport.zoom + "px zoom, FOV: "+viewport.fov+"deg");
-			//debug.log("Distance to projection plane is " + viewport.projectionPlaneDistance);
 			
 			this.viewport = viewport;
 			return this.viewport;
