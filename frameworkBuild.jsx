@@ -41,6 +41,8 @@ $.evalFile(AIRLOOKFRAMEWORK_PATH + "/adastra.jsx");
 										layers[il].scaleToHD();
 									} catch (e) {}
 									layers[il].setTimeRemap();
+								} else if (layers[il].hasAudio === true){
+									layers[il].outPoint = comp.duration;
 								}
 							}
 						}
@@ -54,6 +56,8 @@ $.evalFile(AIRLOOKFRAMEWORK_PATH + "/adastra.jsx");
 										layers[il].scaleToHD();
 									} catch (e) {}
 									layers[il].setTimeRemap();
+								} else if (layers[il].hasAudio === true){
+									layers[il].outPoint = comp.duration;
 								}
 							}
 						}
