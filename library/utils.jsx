@@ -330,8 +330,9 @@
 
 	// remove all layers in a composition
 	utils.clearComp = function(comp) {
-		for(i=0; i< comp.numLayers;i++) {
-			comp.layers[i+1].remove();
+		for(i=comp.numLayers; i > 0 ;i--) {
+			var l = comp.layers[i];
+			l.remove();
 		}
 		return comp;
 	};
