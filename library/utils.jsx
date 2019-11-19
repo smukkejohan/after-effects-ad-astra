@@ -510,6 +510,7 @@
 		layer.mute            = function()                                 			{ return utils.mute(this); };
 		layer.unMute          = function()                                 			{ return utils.unMute(this); };
 		layer.copyPasteKeys   = function(keyStartTime, keyEndTime, toLayer, offset) { return utils.copyPasteKeys(this, keyStartTime, keyEndTime, toLayer, offset); };
+		layer.updateMarkersFromSource = function()									{ return utils.updateMarkersFromSource(this); };
 
 		layer.getMarkerKeyTime = function(comment) {
 		  var index = this.getMarkerIndex(comment);
@@ -822,6 +823,15 @@
 			layer.timeRemapEnabled = true;
 			layer.timeRemap.setValueAtTime(layer.inPoint, time);
 			layer.timeRemap.setValueAtTime(layer.outPoint, time);
+		}
+		return layer;
+	};
+
+	utils.updateMarkersFromSource = function(layer){
+		var sourceProp = layer.getComp().markerProperty;
+		var destProp = layer.property("Marker");
+		for (var i = 1; i <= sourceProp.numKeys; i++){
+			destProp.setValueAtTime(sourceProp.keyTime(i),sourceProp.keyValue(i));
 		}
 		return layer;
 	};
