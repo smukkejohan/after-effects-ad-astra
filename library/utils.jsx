@@ -182,8 +182,13 @@
     /*
     ** Add item to a composition and enhance the layer
     */
-    utils.addToComp = function(src, targetComp) {
-		return utils.enhanceLayer(targetComp.layers.add(src));
+    utils.addToComp = function(src, targetComp, duration) {
+		var newLayer = utils.enhanceLayer(targetComp.layers.add(src));
+		if(newLayer.hasProtectedRegions() && duration){
+			var stretchPercentage = duration * 100.0 / src.duration;
+			newLayer.stretch = stretchPercentage;
+		}	
+		return newLayer;
 	};
  
 	
@@ -251,7 +256,7 @@
 					item.enableAll = function()                           			{ return utils.enableAllLayers(item);            }
 					item.getCamera = function()                           			{ return utils.getCamera(item);                  }
 					item.setupCamera = function()                         			{ return utils.setupCamera(item);                }
-					item.addToComp = function(comp)                       			{ return utils.addToComp(item, comp);         }
+					item.addToComp = function(comp, duration)                       { return utils.addToComp(item, comp, duration);         }
 					item.getRandomLayer = function()                      			{ return utils.getRandomLayer(item);             }
 					item.getAllCompLayers = function()                    			{ return utils.getAllCompLayers(item);           }
 					item.getAllLayers = function()                        			{ return utils.getAllLayers(item);               }
@@ -482,7 +487,7 @@
 		layer.holdFrameAtTime = function(time)									    { return utils.holdFrameAtTime(this, time); };
 		layer.setStartTime 	  = function(time)									    { return utils.setStartTime(this, time); };
 		layer.setEndTime 	  = function(time)									    { return utils.setEndTime(this, time); };
-		layer.addToComp       = function(comp)                             			{ return utils.copyLayerToComp(this, comp); };
+		layer.addToComp       = function(comp, duration)                            { return utils.copyLayerToComp(this, comp, duration); };
 		layer.getComp         = function()                                 			{ return utils.getCompFromLayer(this); };
 		layer.isComp          = function()                                 			{ return (this.source instanceof CompItem) };
 		layer.getMarkerIndex  = function(comment)                          			{ return utils.getLayerMarkerIndexByComment(this, comment) };
@@ -511,6 +516,7 @@
 		layer.unMute          = function()                                 			{ return utils.unMute(this); };
 		layer.copyPasteKeys   = function(keyStartTime, keyEndTime, toLayer, offset) { return utils.copyPasteKeys(this, keyStartTime, keyEndTime, toLayer, offset); };
 		layer.updateMarkersFromSource = function()									{ return utils.updateMarkersFromSource(this); };
+		layer.hasProtectedRegions = function()										{ return utils.hasProtectedRegions(this); };
 
 		layer.getMarkerKeyTime = function(comment) {
 		  var index = this.getMarkerIndex(comment);
@@ -609,9 +615,9 @@
 		return utils.getComp(layer.source.name);
 	};
 
-	utils.copyLayerToComp = function(layer, comp) {
+	utils.copyLayerToComp = function(layer, comp, duration) {
 
-		return layer.getComp().addToComp(comp);
+		return layer.getComp().addToComp(comp, duration);
 
 	};
 
@@ -835,6 +841,19 @@
 		}
 		return layer;
 	};
+
+	utils.hasProtectedRegions = function(layer){
+		layer.updateMarkersFromSource();
+		var protectedRegionsFound = false;
+		var markers = layer.property("Marker");
+		var numMarkers = markers.numKeys;
+		for(var i = 1; i <= numMarkers; i++){
+			if(markers.keyValue(i).protectedRegion){
+				protectedRegionsFound = true;
+			}
+		}
+		return protectedRegionsFound;
+	}
 
 	utils.setStartTime = function(layer, time){
 		if(layer.isComp()){
