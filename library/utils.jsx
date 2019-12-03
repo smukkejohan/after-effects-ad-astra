@@ -443,7 +443,7 @@ utils.layerExists = function (comp, layerName) {
 utils.getAllLayers = function (comp) {
 	var layers = [];
 	for (var i = 0; i < comp.numLayers; i++) {
-		layers.push(comp.getLayer(comp.layer(i + 1).name))
+		layers.push(comp.getLayer(i + 1))
 	}
 	return layers;
 };
