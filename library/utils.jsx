@@ -656,7 +656,9 @@ utils.enhanceLayer = function (layer) {
 	layer.hasProtectedRegions = function () {
 		return utils.hasProtectedRegions(this);
 	};
-
+	layer.freezeBetweenProtectedRegions = function () {
+		return utils.freezeBetweenProtectedRegions(this);
+	};
 	layer.getMarkerKeyTime = function (comment) {
 		var index = this.getMarkerIndex(comment);
 		if (index) return this.property("Marker").keyTime(index);
@@ -1015,6 +1017,36 @@ utils.hasProtectedRegions = function (layer) {
 	}
 	return protectedRegionsFound;
 }
+
+utils.freezeBetweenProtectedRegions = function (layer) {
+	var markers = layer.property("Marker");
+	var numMarkers = markers.numKeys;
+	var regionToFreeze = {};
+	for (var i = 1; i <= numMarkers; i++) {
+		var kv = markers.keyValue(i);
+		if (kv.protectedRegion) {
+			var keyTime = parseFloat(markers.keyTime(i));
+			var keyDuration = parseFloat(kv.duration);
+			if (Math.abs(keyTime - layer.inPoint) < layer.containingComp.frameDuration) {
+				regionToFreeze.inTimeSeconds = keyDuration + layer.inPoint;
+			}
+			var differenceFromEnd = Math.abs(keyTime + keyDuration - layer.outPoint);
+			if (differenceFromEnd < (layer.containingComp.frameDuration)) {
+				regionToFreeze.outTimeSeconds = parseFloat(markers.keyTime(i));
+			}
+		}
+	}
+	if (regionToFreeze.inTimeSeconds && regionToFreeze.outTimeSeconds) {
+		if (layer.canSetTimeRemapEnabled) {
+			layer.timeRemapEnabled = true;
+			layer.timeRemap.setValueAtTime(regionToFreeze.outTimeSeconds, layer.timeRemap.valueAtTime(regionToFreeze.outTimeSeconds, true));
+			layer.timeRemap.setValueAtTime(regionToFreeze.inTimeSeconds, layer.timeRemap.valueAtTime(regionToFreeze.inTimeSeconds, true));
+			layer.timeRemap.setInterpolationTypeAtKey(2,KeyframeInterpolationType.LINEAR, KeyframeInterpolationType.HOLD);
+			//layer.timeRemap.setValueAtTime(regionToFreeze.outTimeSeconds - (layer.containingComp.frameDuration), layer.timeRemap.valueAtTime(regionToFreeze.inTimeSeconds, true));
+		}
+	}
+	return layer;
+};
 
 utils.setStartTime = function (layer, time) {
 	if (layer.isComp()) {
