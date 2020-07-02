@@ -22,6 +22,7 @@ $.evalFile(AIRLOOKFRAMEWORK_PATH + "/library/vectorMath.jsx");
 $.evalFile(AIRLOOKFRAMEWORK_PATH + "/library/3d.jsx");
 $.evalFile(AIRLOOKFRAMEWORK_PATH + "/library/paragraph.jsx"); // TODO: Update with new boxText methods
 $.evalFile(AIRLOOKFRAMEWORK_PATH + "/library/paragraph2D.jsx");
+$.evalFile(AIRLOOKFRAMEWORK_PATH + "/library/json2.jsx");
 
 // Define Global variables
 // TODO: make library not dependent on theese
